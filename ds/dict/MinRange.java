@@ -22,62 +22,59 @@ public class MinRange {
 	convert this into range. -> retrieve data from there
 
 	*/
+	public static void main(String... args){
+		int[] data = {4 ,5 ,8 ,12 ,2 ,9 ,4 ,3 ,33 ,22 ,11 ,23};
+		MinRange bc = new MinRange (data);
+		bc.printCache();
 
-	public class BigSpaceDict{
-		private Map<String, Integer> cache = new HashMap<String, Integer>();
+		System.out.println("Find min---");
+		int min = bc.findMin2 (5, 8);
+		System.out.println(min);
+	}
 
-		public BigSpaceDict (int[] array){
-			int i, j , len = array.length;
-			String key ;
-			int min = array[0]
-			for(i = 0; i < len) {
-				for(j = 0; j < len; j++){
-					if(array[i][j] < min) min = array[i][j];
-					key = new StringBuilder(i).append(',').append(j);
-					cache.put (key, min);
-				}
+	private Map<String, Integer> cache = new HashMap<String, Integer>();
+
+
+	public MinRange (int[] array){
+		int i , j, len = array.length;
+		String key ;
+		int min;
+		for(i = 0; i < len; i++) {
+			min = array[i];
+			for(j = i; j < len; j++){
+				if(array[j] < min) min = array[j];
+				key = new StringBuilder(Integer.toString(i)).append(',').append(Integer.toString(j)).toString();
+				cache.put (key, min);				
 			}
-		}
-
-		public int findMin2(int start, int end){
-			return cache.get(new StringBuilder(start).append(',').append(end));
-		}
-		/*
-		Print the contents of the cache
-		*/
-		public void printCache(){
-			for(Map.Entry<String, Integer> ec: cache.entrySet(){
-
-			}
-		}
-
-		public static void log(Object obj){
-			System.out.print(obj);
-		}
-		public static void logln(Object obj){
-			log(obj);
-			System.out.priln();
 		}
 	}
 
-	private int[] array;
+	public void init_linear_space(int[] array){
+		
+	}
+
+	public int findMin2(int start, int end){
+		String key = new StringBuilder(Integer.toString(start)).append(',').append(Integer.toString(end)).toString();
+		Integer v =  cache.get(key);
+		System.out.println(key);
+		if(key == null) { return -1;} else return v;
+	}
 	/*
-	To store indice of the array (as keys) and its values
+	Print the contents of the cache
 	*/
-	private Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
-	private Tree<Integer, Integer> sortTree = new TreeMap<Integer, Integer>();
-
-	public FastDictionary(int[] array){
-		this.array = array;
-	}
-
-	public void append(int a){
-		cache.put()
-	}
-
-	public static int findMinRange(int[] array, int i, int j){
-		if(i < j &&  (j >= 0) && (j < array.length)){
-
+	public void printCache(){
+		for(Map.Entry<String, Integer> ec: cache.entrySet()){
+			System.out.print( "[ " + ec.getKey()  + " ; " + ec.getValue() + " ]");
 		}
 	}
+
+	public static void log(Object obj){
+		System.out.print(obj);
+	}
+	public static void logln(Object obj){
+		log(obj);
+		System.out.println();
+	}
+
+
 }
