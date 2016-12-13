@@ -29,16 +29,34 @@ public class MinRange {
 		public BigSpaceDict (int[] array){
 			int i, j , len = array.length;
 			String key ;
-			int min
+			int min = array[0]
 			for(i = 0; i < len) {
 				for(j = 0; j < len; j++){
+					if(array[i][j] < min) min = array[i][j];
 					key = new StringBuilder(i).append(',').append(j);
+					cache.put (key, min);
 				}
 			}
 		}
 
 		public int findMin2(int start, int end){
+			return cache.get(new StringBuilder(start).append(',').append(end));
+		}
+		/*
+		Print the contents of the cache
+		*/
+		public void printCache(){
+			for(Map.Entry<String, Integer> ec: cache.entrySet(){
 
+			}
+		}
+
+		public static void log(Object obj){
+			System.out.print(obj);
+		}
+		public static void logln(Object obj){
+			log(obj);
+			System.out.priln();
 		}
 	}
 
