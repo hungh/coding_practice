@@ -1,5 +1,7 @@
 import java.util.*;
 
+// Problem 3-11 in The Algorithm Design and Manual
+
 public class MinRange {
 	/*
 	x (i) where 1 <= i <= N
