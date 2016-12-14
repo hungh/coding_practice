@@ -60,24 +60,67 @@ public class MinRange {
 
      using binary search  
 	*/
-	public void init_linear_space(int[] array){
-		int i = 0, j = array.length - 1;
-		int middle = i + (i + j)/2;
-
-		while() {
-
+	public void init_linear_space(int[] array, int start, int end, BinTree tree) {
+		if(start == end){
+			BinTree leaf = new BinTree(start + "," + start, array[start]);
+			tree.binary_insert (leaf);
+			return;
 		}
+
+		int middle = start + (start + end)/2;
+		int left = min (start, middle);
+		int right = min(middle, end);
+
+		BinTree left_tree = new BinTree(start + "," + middle, left);
+		BinTree right_tree = new BinTree(middle + "," + end, right);
+		tree.binary_insert(left_tree);
+		tree.binary_insert(right_tree);
 	}
+
+	public BinTree init_tree (int[] array){
+		String root_val = "0," + (array.length - 1);
+		int min_root = min(array, 0, array.length);
+		BinTree root = new BinTree (root_val, min_root);
+		init_linear_space(array, 0, array.length - 1, root);
+	}
+
 	static class BinTree {
+		public BinTree(String value, int min){
+			this.value = value;
+			this.min = min;
+		}
 		public String value;
+		public int min;
 		public BinTree left;
 		public BinTree right;
+
+		// this structure is not a balanced BIN tree
+		/// we wil implement an AVL tree to guarrantee Ologn queries
+		public void binary_insert(BinTree node){
+			if(node == null || root == null) return;
+			if(node.value < root.value){
+				if(root.left == null){
+					// do insert
+					root.left = node;
+				}else{
+					// keep searching for a spot
+					binary_insert(root.left, node);
+				}
+
+			}else{
+				if(root.right == null){
+					// insert
+					root.right = node;
+				}else{
+					binary_insert(root.right, node);
+				}
+			}
+
+		}
+
 	}
 
-	public void binary_insert(BinTree root, BinTree node){
-		
-	}
-
+	
 	public int min (int[] array, int start, int end) {
 		int min = array[start];
 		for(int i = start; i <= end; i++){
