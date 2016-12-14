@@ -5,31 +5,23 @@ public class MinRange {
 	x (i) where 1 <= i <= N
 	expect O(1)
 	Space (n^2)
-	4 5 8 1 2 9 4 3 1 2 11 23
-	0 1 2 3 4 5 6 7 8 9 10 11
-	Dictionary to store 
-	The tree to store the values of the array
-
-	Min (0,1) = 4
-	Min(0, 2) = 4
-	Min(0,....n)
-
-	Min(1,2) , Min(1,3) .. Min(1, n)
-	.. O(n^2)
-
-	Put all of the values into a Dictionary
-	Key???  Key "1,3"  as string
-	convert this into range. -> retrieve data from there
-
 	*/
 	public static void main(String... args){
 		int[] data = {4 ,5 ,8 ,12 ,2 ,9 ,4 ,3 ,33 ,22 ,11 ,23};
 		MinRange bc = new MinRange (data);
-		bc.printCache();
+		// bc.printCache();
 
 		System.out.println("Find min---");
 		int min = bc.findMin2 (5, 8);
 		System.out.println(min);
+
+		// another approachc is Space(n) and Time Complexity O(logn) [with AVL tree]
+		BinTree root = bc.init_tree(data);
+		System.out.println("Total nodes of the tree=" + bc.count_tree_size(root));
+		bc.printTree(root);
+		int min2 = bc.getMinLogN(root, 3, 5);
+		System.out.println("min2=" + min2);
+
 	}
 
 	private Map<String, Integer> cache = new HashMap<String, Integer>();
@@ -44,75 +36,103 @@ public class MinRange {
 			for(j = i; j < len; j++){
 				if(array[j] < min) min = array[j];
 				key = new StringBuilder(Integer.toString(i)).append(',').append(Integer.toString(j)).toString();
-				cache.put (key, min);				
+				cache.put (key, min);
 			}
 		}
+	}
+
+	public int getMinLogN(BinTree root, int s, int e){
+		if(root == null) return Integer.MAX_VALUE;
+
+		if(root.s == s && root.e == e) return root.min;
+		int middle = s + (e - s)/2;
+		int r_middle = root.s +  (root.e - root.s)/2;
+		// if the range falls into the left
+		if (root.s <= s && e <= r_middle) {
+			return getMinLogN(root.left, s, e);
+		}else if (r_middle >= s && e <= root.e){
+			return getMinLogN(root.right, s, e);
+		}else{
+			return Math.min ( getMinLogN( root.left, s, e), getMinLogN(root.right, s, e));
+		}
+	}
+
+
+	public int count_tree_size(BinTree root){
+		if(root == null) return 0;
+		return 1 + count_tree_size (root.right)  + count_tree_size (root.right);
+
 	}
 
 	/*
 	Create a data structure that use O(n) space
 	and answer queries in O(logn)
-
-	4 5 8 1 2 9 4 3 1 2 11 23
-	0 1 2 3 4 5 6 7 8 9 10 11
-
     1. when a range is provided,  build a binary search tree from it O(nlogn) -> Search for min O(logn) [ Could be Q(n)]
-
-     using binary search  
+     using binary search
 	*/
 	public void init_linear_space(int[] array, int start, int end, BinTree tree) {
-		if(start == end){
-			BinTree leaf = new BinTree(start + "," + start, array[start]);
-			tree.binary_insert (leaf);
-			return;
+		if(start >= end) return;
+		tree.binary_insert(new BinTree (start, end, min (array, start, end)));
+		int middle = start + (end - start)/2;
+		init_linear_space(array, start, middle, tree);
+		init_linear_space(array, middle + 1, end, tree);
+
+	}
+
+	public void printTree(BinTree root){
+		if(root != null) {
+			System.out.print(" ; Left: [ ");
+			printTree(root.left);
+			System.out.print(" ;VAL: { v:" + root.range() + ", min: " + root.min + "} ");
+			System.out.println(" ; Right: ");
+			printTree(root.right);
+			System.out.println(" ] ;  ");
 		}
-
-		int middle = start + (start + end)/2;
-		int left = min (start, middle);
-		int right = min(middle, end);
-
-		BinTree left_tree = new BinTree(start + "," + middle, left);
-		BinTree right_tree = new BinTree(middle + "," + end, right);
-		tree.binary_insert(left_tree);
-		tree.binary_insert(right_tree);
 	}
 
 	public BinTree init_tree (int[] array){
-		String root_val = "0," + (array.length - 1);
-		int min_root = min(array, 0, array.length);
-		BinTree root = new BinTree (root_val, min_root);
+		int min_root = min(array, 0, array.length -1);
+		BinTree root = new BinTree (0, array.length, min_root);
 		init_linear_space(array, 0, array.length - 1, root);
+		return root;
 	}
 
 	static class BinTree {
-		public BinTree(String value, int min){
-			this.value = value;
+		public BinTree(int s, int e, int min){
+			this.value = s * 10 + e;
 			this.min = min;
+			this.s = s;
+			this.e = e;
 		}
-		public String value;
+		public String range() {
+			return  s + "," + e;
+		}
+		public int value;
 		public int min;
+		public int s;
+		public int e;
 		public BinTree left;
 		public BinTree right;
 
 		// this structure is not a balanced BIN tree
 		/// we wil implement an AVL tree to guarrantee Ologn queries
 		public void binary_insert(BinTree node){
-			if(node == null || root == null) return;
-			if(node.value < root.value){
-				if(root.left == null){
+			if(node == null) return;
+			if(node.value < this.value){
+				if(this.left == null){
 					// do insert
-					root.left = node;
+					this.left = node;
 				}else{
 					// keep searching for a spot
-					binary_insert(root.left, node);
+					this.left.binary_insert(node);
 				}
 
 			}else{
-				if(root.right == null){
+				if(this.right == null){
 					// insert
-					root.right = node;
+					this.right = node;
 				}else{
-					binary_insert(root.right, node);
+					this.right.binary_insert(node);
 				}
 			}
 
@@ -120,7 +140,7 @@ public class MinRange {
 
 	}
 
-	
+
 	public int min (int[] array, int start, int end) {
 		int min = array[start];
 		for(int i = start; i <= end; i++){
