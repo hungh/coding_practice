@@ -49,8 +49,41 @@ public class MinRange {
 		}
 	}
 
+	/*
+	Create a data structure that use O(n) space
+	and answer queries in O(logn)
+
+	4 5 8 1 2 9 4 3 1 2 11 23
+	0 1 2 3 4 5 6 7 8 9 10 11
+
+    1. when a range is provided,  build a binary search tree from it O(nlogn) -> Search for min O(logn) [ Could be Q(n)]
+
+     using binary search  
+	*/
 	public void init_linear_space(int[] array){
+		int i = 0, j = array.length - 1;
+		int middle = i + (i + j)/2;
+
+		while() {
+
+		}
+	}
+	static class BinTree {
+		public String value;
+		public BinTree left;
+		public BinTree right;
+	}
+
+	public void binary_insert(BinTree root, BinTree node){
 		
+	}
+
+	public int min (int[] array, int start, int end) {
+		int min = array[start];
+		for(int i = start; i <= end; i++){
+			if(array[i] < min) min = array[i];
+		}
+		return min;
 	}
 
 	public int findMin2(int start, int end){
