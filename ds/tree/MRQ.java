@@ -1,30 +1,29 @@
 public class MRQ {
-	public Tree buildBalancedTree (int[] array){
-		if(array == null) return null;
-
-		// build the tree with n - 1 node (where n is the length of the array)
-		Tree root = new Tree ();
-		// scan through the array
-		int i  = 0, len = array.length - 1, j = 0;
-		Tree[] cache = new Tree[2*len - 1];
-
-
-		int start = 0; 
-		int end = len - (len % 2);
-
-		for(; i <= end; i++){
-			
-		}
-
-
-
-
+	public static void main(String[] args) {
+		int[] arr = {3, 4, 5, 8 , 7, 8, 9, 1, 2, 12, 9};
+		int[] ret = init_tree (arr);
+		print(ret);
 	}
 
-	private class Tree {
-		public Tree (int value) { this.value = value; }
-		public int value;
-		public Tree left;
-		public Tree right;
+	public static int[] init_tree (int[] array){
+		int len = array.length;
+
+		if(len < 2) return array;
+
+		int[] ret_array = new int[2 * len - 1];
+
+		int i = 0;
+		for(; i < len; i++)		ret_array [ (len - 1) + i] = array[i];
+
+		// populate the first half of the return array
+		for(i = len - 2; i >= 0; i--){
+			ret_array [i] = ret_array[2 * i + 1] + ret_array[ 2 * i + 2];
+		}
+		return ret_array;
+	}
+
+	public static void print(int[] a){
+		for(int e: a) System.out.print (" " + e);
+		System.out.println();
 	}
 }
