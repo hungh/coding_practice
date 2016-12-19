@@ -5,6 +5,14 @@ public class MRQ {
 		print(ret);
 	}
 
+	public static int getPartialSum(int start, int i, int[] array, int sum){
+		if(start == i){
+			return sum + array[i];
+		}else if(start < i) {
+			return getPartialSum(2 * i + 2, i, array, sum + array[2*i + 1]); // move to the right
+		}
+	}
+
 	public static int[] init_tree (int[] array){
 		int len = array.length;
 
