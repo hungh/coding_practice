@@ -1,16 +1,37 @@
 public class MRQ {
 	public static void main(String[] args) {
-		int[] arr = {3, 4, 5, 8 , 7, 8, 9, 1, 2, 12, 9};
+		int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 		int[] ret = init_tree (arr);
 		print(ret);
+		int ps = getPartialSum (ret, 8);
+		System.out.println("Partial Sum = " + ps);
+		
 	}
 
-	public static int getPartialSum(int start, int i, int[] array, int sum){
-		if(start == i){
-			return sum + array[i];
-		}else if(start < i) {
-			return getPartialSum(2 * i + 2, i, array, sum + array[2*i + 1]); // move to the right
+	public static int getPartialSum(int[] array, int i){
+		System.out.println("len = " + array.length);
+		i  = (array.length + 1)/2 - 1 + i;
+		System.out.println("i = " + i);
+		int pi = getParentIdx(i);
+		int sum = array[i];
+		while( pi >= 0) {
+			System.out.println("pi=" + pi);
+			if(pi * 2 + 2 == i ) {
+				if(pi*2 + 1 < array.length)
+					sum += array[ pi * 2 + 1]; //addd the left subtree sum
+			}
+			if(pi == 0) break;
+			i = pi;
+			pi = getParentIdx(i);
 		}
+		return sum;
+	}
+
+	public static int getParentIdx (int i){
+		if(i %2 == 0)
+			return i/2 - 1;
+		else
+			return i/2;
 	}
 
 	public static int[] init_tree (int[] array){
@@ -34,4 +55,6 @@ public class MRQ {
 		for(int e: a) System.out.print (" " + e);
 		System.out.println();
 	}
+
+
 }
