@@ -8,7 +8,7 @@ public class AllLists {
 		int[] a = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		AllLists al = new AllLists();
 		LinkList head = al.createList(a);
-		al.printList(head);
+		printList(head);
 		LinkList middle = al.findMiddleNode(head);
 		System.out.println("Middle=" + middle.value);
 	}
@@ -37,7 +37,7 @@ public class AllLists {
 		return head;	
 	}
 
-	public void printList(LinkList head){
+	public static void printList(LinkList head){
 		LinkList curr = head;
 		while(curr != null) {
 			System.out.print(" " + curr.value);

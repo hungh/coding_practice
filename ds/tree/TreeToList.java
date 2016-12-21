@@ -20,7 +20,7 @@ public class TreeToList {
 
 		printTreeAsList(root);
 	}
-	// flatten and make it to the right
+	// flatten left and make it to the right
 	public static void convert(Tree root){
 		if(root == null) return;		
 		if(root.left == null){
@@ -40,6 +40,11 @@ public class TreeToList {
 			curr.right = myRight;
 			convert(myRight);
 		}		
+	}
+
+	// convert the tree clock wise
+	public static void convert_cw(Tree root){
+
 	}
 
 	public static void printTreeAsList(Tree root){
