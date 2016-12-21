@@ -1,9 +1,11 @@
 public class BasicSortSearch {
   public static void main(String[] args) {
     int[] a = {0, 4, 3, 5, 3, 2, 8, 9, 2, 8};
-    // search(a);
-    heap_sort(a);
-    print(a);
+    // search(a);    
+    Heap heap = new Heap(a);
+    int[] ret = heap.heap_sort();
+    heap.print(ret);  
+    
   }
 
   public static void print(int[] a){
@@ -27,6 +29,6 @@ public class BasicSortSearch {
       }
     }
   }
+}
 
   
-}

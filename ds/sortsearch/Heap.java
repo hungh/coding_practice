@@ -15,10 +15,15 @@ public class Heap {
 	private int[] a;
 
 	public Heap(int[] ai){
-		this.a = ai;
-		n = ai.length - 1; // don't count the first index
-		heapify();
+		this.a = new int[ai.length + 2];		
+		heapify(ai);
 		print(this.a); 
+	}
+	
+	// insert a value into the heap
+	public void insert(int v){
+		a[++n] = v;		
+		bubble_up(n);
 	}
 
 	public void print(int[] r){
@@ -50,10 +55,10 @@ public class Heap {
 	  // heap sort - is a selection sort with data represented in heap
 	  // build array heap (min heap), index 1
 	  // take nlogn
-	public void heapify (){
+	public void heapify (int[] input_array){
 		int  i;
-		for(i = n; i > 0; i-- ){
-			bubble_up(i);
+		for(i = 0; i < input_array.length; i++){
+			insert(input_array[i]);
 		}
 	}
 
