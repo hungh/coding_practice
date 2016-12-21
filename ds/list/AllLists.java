@@ -1,6 +1,7 @@
 /*
 Write a function to find the middle node of a singly-linked list
 */
+package ds.list;
 
 public class AllLists {
 	public static void main(String[] args){

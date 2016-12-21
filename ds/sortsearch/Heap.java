@@ -1,12 +1,7 @@
 public class Heap {
 	public static void main(String[] args){
 		int[] a = {0, 3, 15, 4, 3, 12, 9, 2, 1, 39, 22, 56, -8, 32};
-		Heap heap = new Heap(a);
-		// System.out.println("m = " + heap.extract_min());
-		// System.out.println("m = " + heap.extract_min());
-		// System.out.println("m = " + heap.extract_min());
-		// System.out.println("m = " + heap.extract_min());
-		
+		Heap heap = new Heap(a);		
 		int[] ret = heap.heap_sort();
 		heap.print(ret); 	
 	}

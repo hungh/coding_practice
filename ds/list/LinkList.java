@@ -1,3 +1,4 @@
+package ds.list;
 
 public class LinkList{
 
