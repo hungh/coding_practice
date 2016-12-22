@@ -15,4 +15,9 @@ public class Common {
 
 	}
 
+	public static void printArray(int[] a){
+		for(int e: a) System.out.print(" " + e);
+		System.out.println();
+	}
+
 }

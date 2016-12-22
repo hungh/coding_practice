@@ -3,6 +3,8 @@ Write a function to find the middle node of a singly-linked list
 */
 package ds.list;
 
+import ds.Common;
+
 public class AllLists {
 	public static void main(String[] args){
 		int[] a = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -14,6 +16,12 @@ public class AllLists {
 
 		testCyclicLinkList();
 		testCyclicLinkList2();
+
+		// findProduct
+		int[] arr = {1, 2, 3, 4};
+		int[] m = findProduct(arr);
+		Common.printArray(m);
+
 	}
 
 	public static void testCyclicLinkList(){
@@ -100,6 +108,62 @@ public class AllLists {
 			curr = nextNode;
 		}	
 		return head;	
+	}
+	/* (Algorithm Design and Manual)
+	3-28. You have an unordered array X of n integers. 
+	Find the array M containing n elements where Mi is the product of all integers in X except for Xi. 
+	You may not use division. You can use extra memory. (Hint: There are solutions faster than O(n2).)
+	X { n integers }
+	Find M {n}, where Mi = X0*X1*...XN-1
+	example
+	X = { 2, 3, 4, 5, 6}
+	M0 = (3*4*5*6) = C1,N 
+	M1 = (2*4*5*6) = C0,0 * C2,N
+	M2= (2*3*5*6) = C0,1 * C3,N
+	M3 = C0,2 * C4,N
+	M4 = C0,3 * C5,N
+	M5 = C0,4 * C6,N
+	M6 = C0,5 * C7,N
+	Observation:
+	C0,2 = C0,1 * C2
+	C0,3 = C0,2 * C3
+	C0,4 = C0,3 * C4
+	..
+	C1,N = C1 * C2,N
+	C(n-2, n) = C(n-2) * C(N-1)
+	C(n-1, n) = C(n-1) * Cn
+	Cn = n
+
+	...
+	*/
+	public static int[] findProduct(int[] a){
+		if(a == null) return a;
+		int[] m = new int [a.length];
+		int[] c = new int[a.length];
+		int[] q = new int[a.length];
+		// calculate M0
+		int i;	
+		c[0] = a[0];
+		for(i = 1; i < a.length - 1; i++){
+			c[i] = c[i - 1] * a[i];
+		}
+
+		q[a.length - 1] = a[a.length - 1]; 
+		for(i = a.length - 2; i >= 0; i--){
+			q[i] = a[i] * q[i + 1];
+		}
+		
+		for(i = 0; i < a.length; i++){
+			if(i == 0) {
+				m[i] = q[i+ 1];
+			}else if(i == a.length - 1){
+				m[i] = c[i - 1];
+			}else{
+				m[i] = c[i-1] * q[i+ 1];		
+			}		
+		}
+		return m;
+
 	}
 
 	public static void printList(LinkList head){
