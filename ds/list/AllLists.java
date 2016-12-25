@@ -9,7 +9,7 @@ public class AllLists {
 	public static void main(String[] args){
 		int[] a = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		AllLists al = new AllLists();
-		LinkList head = al.createList(a);
+		LinkList head = createList(a);
 		printList(head);
 		LinkList middle = al.findMiddleNode(head);
 		System.out.println("Middle=" + middle.value);
@@ -99,7 +99,7 @@ public class AllLists {
 		return -1;
 	}
 
-	public LinkList createList(int[] a){
+	public static LinkList createList(int[] a){
 		LinkList head = new LinkList(a[0]);
 		LinkList curr = head;
 		for(int i = 1; i < a.length; i++) {

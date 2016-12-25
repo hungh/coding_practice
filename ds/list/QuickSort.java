@@ -1,3 +1,5 @@
+package ds.list;
+
 public class QuickSort {
 	public static void main(String[] args){
 		int[] a = {2, 3, 1, 5, 6, 12, 9, 6, 8, 7};
