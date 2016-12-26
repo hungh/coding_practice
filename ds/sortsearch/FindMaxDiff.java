@@ -16,8 +16,18 @@ public class FindMaxDiff {
 	// scan a group of 3 items, get rid of the middle one
 	// repeat the process until the end of the array
 	public static int[] findMaxDiffPair(int[] a){
-		if(a == null || a.length < 3) throw new IllegalArgumentException("Invalid array length.");
+		if(a == null || a.length < 2) throw new IllegalArgumentException("Invalid array length.");
 		int[]  maxRet = new int[3]; 
+		if(a.length == 2){
+			if(a[0] < a[1]) {
+				maxRet = new int[]{0, 1, a[1] - a[0]};
+			} else{
+				maxRet = new int[]{1, 0, a[0] - a[1]};
+			}
+			return maxRet;
+		} 
+
+		
 		int[] ret = getMaxIn3(a, 2, 0, 1);
 		int s = ret[0], l = ret[1];
 		maxRet[0] = ret[0]; maxRet[1] = ret[1]; maxRet[2] = ret[2];
