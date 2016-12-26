@@ -8,7 +8,7 @@ package ds.sortsearch;
 
 public class FindMaxDiff {
 	public static void main(String[] args){
-		int[] a = {6, 13, 19, 3, 8, 8, 4, 2, 1};
+		int[] a = {6, 13, 19, 5, 4, 9, 3, 2, 6, 9, 4, 3, 2};
 		int[] ret = findMaxDiffPair(a);
 		System.out.println("min_idex=" + ret[0] +  ";max_index=" + ret[1] +  ";max_diff= " + ret[2]);
 	}
@@ -18,9 +18,9 @@ public class FindMaxDiff {
 	public static int[] findMaxDiffPair(int[] a){
 		if(a == null || a.length < 3) throw new IllegalArgumentException("Invalid array length.");
 		int[]  maxRet = new int[3]; 
-		maxRet[2] = Integer.MIN_VALUE;
 		int[] ret = getMaxIn3(a, 2, 0, 1);
 		int s = ret[0], l = ret[1];
+		maxRet[0] = ret[0]; maxRet[1] = ret[1]; maxRet[2] = ret[2];
 		for(int i = 3; i < a.length; i++) {
 			ret = getMaxIn3(a, i, s, l);			
 			s = ret[0];
