@@ -42,6 +42,7 @@ public class SumToX {
 		return "Not Found";
 	}
 
+
 	// assume that the array is sorted, find in O(n)
 	public static String findSum3(int[] a, int x){
 		// scan the array, 
@@ -57,6 +58,21 @@ public class SumToX {
 			}
 		}
 		return "Not Found";
+	}
+	// like findSum3 but the return is a boolean
+	public static boolean findSum3Bool(int[] a, int x){
+		int begin = 0, end = a.length -1, sum;
+		while(begin < a.length -1 && (end >= 0)){
+			sum = a[begin] + a[end];
+			if(sum < x){
+				begin++;
+			}else if(sum > x){
+				end--;
+			}else {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static String findSum2(int[] a, int x){
