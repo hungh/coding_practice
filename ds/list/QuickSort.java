@@ -30,9 +30,15 @@ public class QuickSort {
 		for(int e: a) System.out.print(" " + e);
 		System.out.println();
 	}
-
+	// returns index of the pivot
 	public static int partition(int[] a, int l, int h) {
-		int i, p =  h;
+		// partition the array with pivot index is the highest index
+		return partition(a, l, h, h);
+	}
+
+	// partition the array with a specific pivot index
+	public static int partition(int[] a, int l, int h, int pivot_index){
+		int i, p =  pivot_index;
 		int firsthigh = l ;
 		for(i = l; i < h; i++){
 			if(a[i] < a[p]) {
@@ -42,18 +48,12 @@ public class QuickSort {
 		}
 		swap(a, p, firsthigh);
 		return firsthigh;
-
 	}
 
-	private static void swap(int[] a, int i, int j){
+	public static void swap(int[] a, int i, int j){
 		int temp = a[j];
 		a[j] = a[i];
 		a[i] = temp;
 	}
 }
 
-/**
-
-4 5 3 1 3 5 2
-
-*/
