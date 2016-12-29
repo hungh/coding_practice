@@ -38,6 +38,7 @@ public class LinearSelection {
 		
 	}
 	// median of medians - O(n) time complexity
+	//TODO: tests fail. Needs some rework
 	public static int select(int[] a, int k, int begin, int end){
 		int pivot_index;
 		while(true){
