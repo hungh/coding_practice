@@ -19,6 +19,7 @@ public class Heap {
 	
 	// insert a value into the heap
 	public void insert(int v){
+		if(n == a.length - 1) expand();
 		a[++n] = v;		
 		bubble_up(n);
 	}
@@ -57,6 +58,14 @@ public class Heap {
 		for(i = 0; i < input_array.length; i++){
 			insert(input_array[i]);
 		}
+	}
+
+	private void expand(){
+		int[]  new_mem =  new int[2 * a.length];
+		for(int i = 0; i < a.length; i++){
+			new_mem[i] = a[i];
+		}
+		this.a = new_mem;
 	}
 
 	private void bubble_down(int i){
