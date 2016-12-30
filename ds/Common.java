@@ -1,5 +1,6 @@
 package ds;
-import java.util.List;
+
+import java.util.Collection;
 
 public class Common {
 	public static void log(Object obj) {
@@ -27,7 +28,7 @@ public class Common {
 		System.out.println();
 	}
 
-	public static int[] toArray(List<Integer> a){
+	public static int[] toArray(Collection<Integer> a){
 		int[] r = new int[a.size()];
 		int i = 0;
 		for(Integer e: a) {
