@@ -117,10 +117,8 @@
  				mbuff.append(tc);
  				if(i == s.length() - 1) { // last word
  					if(isValidWord(mbuff, lastInvalidIndex)){
- 						if(curr == null){
- 							curr = new LinkListGR<String>(mbuff.toString()); 
- 							prev.next = curr;
- 						}
+ 						curr = new LinkListGR<String>(mbuff.toString()); 
+ 						prev.next = curr;
  					}
  					
  				}
