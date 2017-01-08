@@ -7,18 +7,12 @@
  This application can be efficiently implemented by sorting all the words that occur in the text and then passing through 
  the sorted sequence to identify one instance of each distinct word. Write a brief report with your conclusions.
 */
-
- // I only implement merge sort to sort a large text file 
- // write it into a disk
- // read the sorted file to scan for each instance of words in the file
-
- // assume that we have limited memory size 
  // KEY WORD: external search
-
  package ds.sortsearch.challenges;
 
  import java.net.*;
  import java.io.*;
+ import ds.PairG;
  import ds.Common;
  import ds.list.LinkListGR;
  import ds.sortsearch.MergeSortS;
@@ -26,11 +20,11 @@
  public class Problem4D37 {
 
  	private static final String TEMP_PATH = "/tmp/c";
+ 	private static final int LINE_SIZE = 200;
 
  	public static void main(String[] args){
  		sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
  	}
-
  	/*
  	read a large text file from url, write it down into 
  	small chunks and merge sorted chunks into one.
@@ -40,24 +34,20 @@
  		BufferedReader buff = null;
  		BufferedWriter out = null;
  		StringBuilder buffer = new StringBuilder();
-
  		long len = 0;
  		int chunkNum = 0;
  		try{
  			URL url = new URL (url_str);
  			conn = url.openConnection();
 			buff = new BufferedReader (new InputStreamReader( conn.getInputStream()));	
-
 			out = new BufferedWriter(new FileWriter("/tmp/out.txt"));
 			String line;
 			LinkListGR<String> h;
 			while( (line = buff.readLine()) != null) {
 				line += " ";
-				
 				if(len + line.length() > sizeLim){
 					// write out to a smaller file 
-					h = toWords(buffer.toString());
-					
+					h = toWords(buffer.toString()).a;
 					// write h out into disk
 					toDisk(MergeSortS.merge_sort(h), TEMP_PATH + chunkNum);
 					// adjust buffer
@@ -71,7 +61,7 @@
 
 			// last chunk
 			if(buffer.length() > 0){
-				h = toWords(buffer.toString());
+				h = toWords(buffer.toString()).a;
 				toDisk(MergeSortS.merge_sort(h), TEMP_PATH + chunkNum);
 			}
 			// merge
@@ -86,12 +76,10 @@
  			}catch(Exception e1){
  				e1.printStackTrace();
  			}
- 			
  		} 
- 		
  		return true;
- 			
  	}
+
  	// k-way list merging
  	public static LinkListGR<String> kWayMerge(LinkListGR<String>[] one, int start, int end){
  		if(start > end) return null;
@@ -102,14 +90,11 @@
  		return MergeSortS.merge( kWayMerge(one, start, (end + start)/2), kWayMerge (one, (end + start)/2 + 1, end) );
  	}
 
- 	//TODO
  	public static void mergeFromDisk(int chunkNum, long sizeLim, BufferedWriter out) throws Exception {
- 		BufferedReader[] mReaders = null;
  		// merge all chunks together
 		// we need 1 chunk for the merge results
-		mReaders = new BufferedReader[chunkNum];
+		BufferedReader[] mReaders = new BufferedReader[chunkNum];
 		long inMemSize = (long) sizeLim / (chunkNum + 1);
-		if(inMemSize < 900000)  inMemSize = 900000; // hack  for problem when file is not big enough
 		LinkListGR[] buffs = new LinkListGR[chunkNum]; 
 		LinkListGR[] currs = new LinkListGR[chunkNum]; 
 		String line;
@@ -122,37 +107,31 @@
 			mReaders [i] = new BufferedReader (new InputStreamReader( new FileInputStream(TEMP_PATH + i) ));
 		}
 		int buffLen;
-		LinkListGR<String> tmp;
+		PairG<LinkListGR<String>, LinkListGR<String>> tmp;
 		while(!exshausted) {
 			exshausted = true;
 			for(i = 0; i < chunkNum; i++) {
 				buffLen = 0;
-				while( (line = mReaders[i].readLine()) != null) {
+				while((buffLen < inMemSize) && (line = mReaders[i].readLine()) != null) {
 					exshausted = false;
-					if(buffLen + line.length() < inMemSize) {
-						tmp = new LinkListGR<String>(line);
-						if(currs[i] == null){
-							currs[i] = tmp;
-							buffs[i] = tmp; // head
-						}else{
-							currs[i].next = tmp;
-							currs[i] = currs[i].next;
-						}
-						buffLen += line.length();
-						
-					}else {
-						break;
+					tmp = toWords(line);
+					if(tmp.a == null) continue;
+					if(buffs[i] == null){
+						buffs[i] = tmp.a; // head
+						currs[i] = tmp.b;						
+					}else{
+						currs[i].next = tmp.a;
+						currs[i] = tmp.b;
 					}
-					
+					buffLen += line.length();
 				}
 			}
-
-
 			// write to disk
 			toDisk( kWayMerge(buffs, 0, buffs.length - 1), out) ;
 			// reset the buffer
-			for(i = 0; i < buffs.length; i++) buffs[i] = null;
+			for(i = 0; i < buffs.length; i++) { buffs[i] = null; currs[i] = null; }
 		}
+		for(i = 0; i < chunkNum; i++) mReaders [i].close();
  	}
 
  	public static void toDisk(LinkListGR<String> h, String filePath) throws Exception{
@@ -161,24 +140,26 @@
 
  	public static void toDisk(LinkListGR<String> h, BufferedWriter out) throws Exception{
  		if(h == null) return;
- 		try{
-	 		LinkListGR<String> curr = h;
-	 		while(curr != null){
-	 			out.write(curr.value + " ");
-	 			curr = curr.next;
-	 		}
-	 	}finally {
-	 		try{
-	 			out.close();
-	 		}catch(Exception e) {}
-	 	}
+		long len = 0;
+ 		LinkListGR<String> curr = h;
+ 		while(curr != null){
+ 			len += curr.value.length();
+ 			if(len > LINE_SIZE){
+ 				out.write(curr.value + '\n');	
+ 				len = 0;
+ 			} else {
+ 				out.write(curr.value + ' ');
+ 			}
+ 			curr = curr.next;
+ 		}
  	}
 
- 	// parse a string into words
- 	public static LinkListGR<String> toWords(String s){
+ 	// parse a string into words 
+ 	// return head and tail
+ 	public static PairG<LinkListGR<String>, LinkListGR<String>>  toWords(String s){
  		// can use String.split, but here we do a little different
  		if(s == null) return null;
- 		LinkListGR<String> head = new LinkListGR<String>(null); 		
+ 		LinkListGR<String> head = null;
  		LinkListGR<String> curr = head;
  		LinkListGR<String> prev = curr;
  		char sc; //  char
@@ -189,10 +170,8 @@
  		StringBuilder mbuff = new StringBuilder();
  		for(int i = 0; i < s.length(); i++) { 			
  			sc = s.charAt(i); 			
-
- 			if(sc == ' ' || sc == '\n' || sc == '\t'){
+ 			if(sc == ' ' || sc == '\n' || sc == '\t'){ 				
  				space_idx = i;
-
  				if(lastInvalidIndex >= 0){
  					if(! isValidWord(mbuff, lastInvalidIndex)){
 						mbuff.setLength(0); 						
@@ -201,10 +180,14 @@
  					lastInvalidIndex = -1; 					
  				}
  				
- 				if(lastc > 0) { 	 					
+ 				if(lastc >= 0) { 	 				
  					if(curr == null){
- 						curr = new LinkListGR<String>(null); 		
- 						prev.next = curr;
+ 						curr = new LinkListGR<String>(null); 
+ 						if(prev == null) {
+ 							head = curr; prev = curr;  
+ 						}else{
+ 							prev.next = curr;	
+ 						} 						
  					} 
 	 				curr.value = mbuff.toString();	
  					prev = curr;
@@ -220,19 +203,24 @@
  				if( tc < 65 || tc > 122){
  					lastInvalidIndex = mbuff.length();
  				}
- 				mbuff.append(tc);
- 				if(i == s.length() - 1) { // last word
+ 				mbuff.append(tc); 				
+ 				if(i == s.length() - 1) { // last word 					
  					if(isValidWord(mbuff, lastInvalidIndex)){
- 						curr = new LinkListGR<String>(mbuff.toString()); 
- 						prev.next = curr;
+ 						curr = new LinkListGR<String>(mbuff.toString());  						
+ 						if(prev == null) {
+ 							head = curr;
+ 							prev = curr;
+ 						}else{
+ 							prev.next = curr;	
+ 						} 						
  					}
  					
  				}
  			}
-
  		}
- 		
- 		return head;
+ 		LinkListGR<String> tail;
+ 		if(curr == null) tail = prev; else tail = curr;
+ 		return new PairG<LinkListGR<String>, LinkListGR<String>>(head, tail);
  	}
 
  	private static boolean isValidWord(StringBuilder s, int lastInvalidIndex){
@@ -257,5 +245,4 @@
  		}
  		return true;
  	}
-
  } 		
