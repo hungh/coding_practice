@@ -13,7 +13,7 @@
  // read the sorted file to scan for each instance of words in the file
 
  // assume that we have limited memory size 
- // text is from http://www.gutenberg.org/files/2600/2600-0.txt
+ // KEY WORD: external search
 
  package ds.sortsearch.challenges;
 
@@ -25,34 +25,58 @@
 
  public class Problem4D37 {
 
+ 	private static final String TEMP_PATH = "/tmp/c";
+
  	public static void main(String[] args){
- 		// sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt");
- 		LinkListGR<String> h = toWords("Hello Word. 123 You've completed.");
- 		LinkListGR<String> curr = h;
- 		while(curr != null){
- 			System.out.print(curr.value + " ");
- 			curr = curr.next;
- 		}
+ 		sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
  	}
 
  	/*
  	read a large text file from url, write it down into 
  	small chunks and merge sorted chunks into one.
  	*/
- 	public static boolean sort_large_text(String url_str){
+ 	public static boolean sort_large_text(String url_str, long sizeLim){
  		URLConnection conn = null;
  		BufferedReader buff = null;
  		BufferedWriter out = null;
+ 		StringBuilder buffer = new StringBuilder();
+
+ 		long len = 0;
+ 		int chunkNum = 0;
  		try{
  			URL url = new URL (url_str);
  			conn = url.openConnection();
 			buff = new BufferedReader (new InputStreamReader( conn.getInputStream()));	
 
-			out = new BufferedWriter(new FileWriter("out.txt"));
+			out = new BufferedWriter(new FileWriter("/tmp/out.txt"));
 			String line;
+			LinkListGR<String> h;
 			while( (line = buff.readLine()) != null) {
-				out.write(line + " ");
+				line += " ";
+				
+				if(len + line.length() > sizeLim){
+					// write out to a smaller file 
+					h = toWords(buffer.toString());
+					
+					// write h out into disk
+					toDisk(MergeSortS.merge_sort(h), TEMP_PATH + chunkNum);
+					// adjust buffer
+					buffer.setLength(0);
+					len = 0;
+					chunkNum++;
+				}
+				buffer.append(line);
+				len += line.length();
 			}
+
+			// last chunk
+			if(buffer.length() > 0){
+				h = toWords(buffer.toString());
+				toDisk(MergeSortS.merge_sort(h), TEMP_PATH + chunkNum);
+			}
+			// merge
+			mergeFromDisk(chunkNum, sizeLim, out);
+
  		}catch(Exception e) {
  			e.printStackTrace();
  		}finally {
@@ -64,8 +88,90 @@
  			}
  			
  		} 
+ 		
  		return true;
  			
+ 	}
+ 	// k-way list merging
+ 	public static LinkListGR<String> kWayMerge(LinkListGR<String>[] one, int start, int end){
+ 		if(start > end) return null;
+ 		if(end == start) return one [start];
+ 		if(end - start == 1) {
+ 			return MergeSortS.merge(one[start], one[end]);
+ 		}
+ 		return MergeSortS.merge( kWayMerge(one, start, (end + start)/2), kWayMerge (one, (end + start)/2 + 1, end) );
+ 	}
+
+ 	//TODO
+ 	public static void mergeFromDisk(int chunkNum, long sizeLim, BufferedWriter out) throws Exception {
+ 		BufferedReader[] mReaders = null;
+ 		// merge all chunks together
+		// we need 1 chunk for the merge results
+		mReaders = new BufferedReader[chunkNum];
+		long inMemSize = (long) sizeLim / (chunkNum + 1);
+		if(inMemSize < 900000)  inMemSize = 900000; // hack  for problem when file is not big enough
+		LinkListGR[] buffs = new LinkListGR[chunkNum]; 
+		LinkListGR[] currs = new LinkListGR[chunkNum]; 
+		String line;
+		int i;
+		boolean exshausted = false;
+		Common.log("in memory size=" + inMemSize);
+
+		// init all readers
+		for(i = 0; i < chunkNum; i++){
+			mReaders [i] = new BufferedReader (new InputStreamReader( new FileInputStream(TEMP_PATH + i) ));
+		}
+		int buffLen;
+		LinkListGR<String> tmp;
+		while(!exshausted) {
+			exshausted = true;
+			for(i = 0; i < chunkNum; i++) {
+				buffLen = 0;
+				while( (line = mReaders[i].readLine()) != null) {
+					exshausted = false;
+					if(buffLen + line.length() < inMemSize) {
+						tmp = new LinkListGR<String>(line);
+						if(currs[i] == null){
+							currs[i] = tmp;
+							buffs[i] = tmp; // head
+						}else{
+							currs[i].next = tmp;
+							currs[i] = currs[i].next;
+						}
+						buffLen += line.length();
+						
+					}else {
+						break;
+					}
+					
+				}
+			}
+
+
+			// write to disk
+			toDisk( kWayMerge(buffs, 0, buffs.length - 1), out) ;
+			// reset the buffer
+			for(i = 0; i < buffs.length; i++) buffs[i] = null;
+		}
+ 	}
+
+ 	public static void toDisk(LinkListGR<String> h, String filePath) throws Exception{
+ 		toDisk (h, new BufferedWriter(new FileWriter(filePath)));
+ 	}
+
+ 	public static void toDisk(LinkListGR<String> h, BufferedWriter out) throws Exception{
+ 		if(h == null) return;
+ 		try{
+	 		LinkListGR<String> curr = h;
+	 		while(curr != null){
+	 			out.write(curr.value + " ");
+	 			curr = curr.next;
+	 		}
+	 	}finally {
+	 		try{
+	 			out.close();
+	 		}catch(Exception e) {}
+	 	}
  	}
 
  	// parse a string into words
