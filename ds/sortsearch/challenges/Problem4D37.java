@@ -18,12 +18,35 @@
  import ds.sortsearch.MergeSortS;
 
  public class Problem4D37 {
-
+ 	private static final String SORTED_OUT_PATH = "/tmp/out.txt";
+ 	private static final String SORTED_UNIQ_PATH = "/tmp/unique_out.txt";
  	private static final String TEMP_PATH = "/tmp/c";
  	private static final int LINE_SIZE = 200;
 
- 	public static void main(String[] args){
+ 	public static void main(String[] args) throws Exception {
  		sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
+ 		// writeUnique();
+ 	}
+ 	// write all unique words from the sorted text file into another file
+ 	public static void writeUnique() throws Exception {
+ 		BufferedWriter writer = null;
+ 		BufferedReader reader = null;
+ 		String lastWord = null;
+ 		String line;
+ 		StringBuilder buff = new StringBuilder();
+ 		int i;
+ 		try{
+ 			writer = new BufferedWriter (new FileWriter (SORTED_UNIQ_PATH));	
+ 			reader = new BufferedReader (new InputStreamReader ( new FileInputStream (SORTED_OUT_PATH)));
+
+ 			// for(line = reader.readLine(); line != null;){
+ 				//TODO
+ 			// }
+ 		} finally {
+ 			writer.close();
+ 			reader.close();
+ 		}
+ 		
  	}
  	/*
  	read a large text file from url, write it down into 
@@ -40,7 +63,7 @@
  			URL url = new URL (url_str);
  			conn = url.openConnection();
 			buff = new BufferedReader (new InputStreamReader( conn.getInputStream()));	
-			out = new BufferedWriter(new FileWriter("/tmp/out.txt"));
+			out = new BufferedWriter(new FileWriter(SORTED_OUT_PATH));
 			String line;
 			LinkListGR<String> h;
 			while( (line = buff.readLine()) != null) {
