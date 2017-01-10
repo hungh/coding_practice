@@ -24,8 +24,7 @@
  	private static final int LINE_SIZE = 200;
 
  	public static void main(String[] args) throws Exception {
- 		// sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
- 		//"http://www.gutenberg.org/files/2600/2600-0.txt"
+ 		// "http://www.gutenberg.org/files/2600/2600-0.txt"
  		if(args.length != 1) {
  			Common.log("File name or URL is required.");
  			System.exit(1);
@@ -288,30 +287,37 @@
  	}
 
  	private static boolean isValidWord(StringBuilder s, int lastInvalidIndex){
- 		char tc;
- 		if(lastInvalidIndex == 0){
- 			tc = s.charAt(0);
- 			if(tc != '"' && tc != '\'' ) return false;
- 			// (1) TODO: what if I have something like this '''tis
- 			// cover for _word___ or ----word
- 			s.deleteCharAt(0);
- 		}
+ 		trimInvalidChars(s);
  		int len = s.length();
- 		if(len < 1) return false;
-
- 		tc = s.charAt(len - 1);
- 		if(lastInvalidIndex == len - 1){
- 			if ( tc != '!' && tc != '?' && tc != '.' && tc != ')' && tc != ';' 
- 				&& tc != ')' && tc != ',' && tc == '\'' && tc == '"') return false;
- 			// TODO: fix this, same as TODO (1)
- 			s.deleteCharAt(lastInvalidIndex);
- 			lastInvalidIndex--;
- 		}
- 		
- 		for(int i = lastInvalidIndex; i >= 0; i--){
- 			tc = s.charAt(i); 			
- 			if(tc != '-' && tc != '\'' && (tc < 65 || tc > 122)) return false;
+ 		char c;
+ 		if(len == 0) return false;
+ 		for(int i = 0; i < len; i++){
+ 			c = s.charAt(i);
+ 			if(c == '\'' || c == '-' || c =='_') continue;
+ 			if(c < 65 || c > 122) return false;
  		}
  		return true;
+ 	}
+
+ 	private static void trimInvalidChars(StringBuilder s){
+ 		if(s == null) return;
+ 		int b = 0, e = s.length() - 1, olde = e;
+ 		char cb, ce;
+ 		while(b <= e){
+ 			cb = s.charAt(b);
+ 			olde = e;
+ 			if(cb < 65 || cb > 122 || cb == '_') {
+ 				s.deleteCharAt(b);
+ 				e--;
+ 			}
+ 			if(e < 0) break;
+ 			ce = s.charAt(e);
+ 			if(ce < 65 || ce > 122 || ce == '_'){
+ 				s.deleteCharAt(e);
+ 				e--;
+ 			}
+ 			if(olde == e) break;
+
+ 		}
  	}
  } 		
