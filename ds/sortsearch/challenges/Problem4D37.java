@@ -25,8 +25,36 @@
 
  	public static void main(String[] args) throws Exception {
  		sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
- 		// writeUnique();
+ 		writeUnique();
  	}
+
+ 	public static String scanUnique(String s, BufferedWriter out, String lastWord) throws Exception {
+ 		StringBuilder buffer = new StringBuilder();
+ 		String str;
+ 		char c;
+ 		int len = s.length();
+ 		for(int i = 0; i < len; i++){
+ 			c = s.charAt(i);
+ 			if(c == ' ' || c == '\n' ){
+ 				if(buffer.length() == 0) continue;
+ 				str = buffer.toString();
+ 				if(! str.equals(lastWord))  {
+ 					out.write(str + ' ');
+ 				}
+ 				lastWord = str;
+ 				buffer.setLength(0);
+ 			}else{
+ 				buffer.append(c);
+ 			}
+ 		}
+		if(buffer.length() > 0 && !(buffer.toString().equals(lastWord))){
+			str = buffer.toString();
+			out.write(buffer.toString() + ' ');
+			lastWord = str;
+		} 
+		return lastWord;		
+ 	}
+
  	// write all unique words from the sorted text file into another file
  	public static void writeUnique() throws Exception {
  		BufferedWriter writer = null;
@@ -36,12 +64,12 @@
  		StringBuilder buff = new StringBuilder();
  		int i;
  		try{
- 			writer = new BufferedWriter (new FileWriter (SORTED_UNIQ_PATH));	
+ 			writer = new BufferedWriter (new FileWriter (SORTED_UNIQ_PATH));	 
  			reader = new BufferedReader (new InputStreamReader ( new FileInputStream (SORTED_OUT_PATH)));
 
- 			// for(line = reader.readLine(); line != null;){
- 				//TODO
- 			// }
+ 			while ( (line = reader.readLine()) != null ) {
+ 				lastWord = scanUnique(line, writer, lastWord);
+ 			}
  		} finally {
  			writer.close();
  			reader.close();
