@@ -24,7 +24,13 @@
  	private static final int LINE_SIZE = 200;
 
  	public static void main(String[] args) throws Exception {
- 		sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
+ 		// sort_large_text("http://www.gutenberg.org/files/2600/2600-0.txt", 800000);
+ 		//"http://www.gutenberg.org/files/2600/2600-0.txt"
+ 		if(args.length != 1) {
+ 			Common.log("File name or URL is required.");
+ 			System.exit(1);
+ 		}
+ 		sort_large_text(args[0], 800000);
  		writeUnique();
  	}
 
@@ -76,21 +82,28 @@
  		}
  		
  	}
+
+ 	public static Reader getReader(String path) throws Exception{
+ 		if(path == null) throw new IllegalArgumentException("path name cannot be null");
+ 		if(path.indexOf("http") == 0){
+ 			URLConnection conn =  new URL (path).openConnection();
+ 			return new InputStreamReader( conn.getInputStream());
+ 		}else{
+ 			return new FileReader( path);
+ 		}
+ 	}
  	/*
  	read a large text file from url, write it down into 
  	small chunks and merge sorted chunks into one.
  	*/
  	public static boolean sort_large_text(String url_str, long sizeLim){
- 		URLConnection conn = null;
  		BufferedReader buff = null;
  		BufferedWriter out = null;
  		StringBuilder buffer = new StringBuilder();
  		long len = 0;
  		int chunkNum = 0;
  		try{
- 			URL url = new URL (url_str);
- 			conn = url.openConnection();
-			buff = new BufferedReader (new InputStreamReader( conn.getInputStream()));	
+			buff = new BufferedReader (getReader(url_str));	
 			out = new BufferedWriter(new FileWriter(SORTED_OUT_PATH));
 			String line;
 			LinkListGR<String> h;
@@ -279,13 +292,18 @@
  		if(lastInvalidIndex == 0){
  			tc = s.charAt(0);
  			if(tc != '"' && tc != '\'' ) return false;
+ 			// (1) TODO: what if I have something like this '''tis
+ 			// cover for _word___ or ----word
  			s.deleteCharAt(0);
  		}
- 		int len = s.length(); 		
+ 		int len = s.length();
+ 		if(len < 1) return false;
+
  		tc = s.charAt(len - 1);
  		if(lastInvalidIndex == len - 1){
  			if ( tc != '!' && tc != '?' && tc != '.' && tc != ')' && tc != ';' 
- 				&& tc != ',' && tc == '\'' && tc == '"') return false;
+ 				&& tc != ')' && tc != ',' && tc == '\'' && tc == '"') return false;
+ 			// TODO: fix this, same as TODO (1)
  			s.deleteCharAt(lastInvalidIndex);
  			lastInvalidIndex--;
  		}
