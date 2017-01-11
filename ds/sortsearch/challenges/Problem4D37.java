@@ -263,7 +263,7 @@
  				lastc  = i;
  				space_idx = -1; // no space yet
  				char tc = s.charAt(i); 				
- 				if( tc < 65 || tc > 122){
+ 				if( tc < 65 || tc > 122 || tc == '_'){
  					lastInvalidIndex = mbuff.length();
  				}
  				mbuff.append(tc); 				
