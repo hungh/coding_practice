@@ -10,10 +10,22 @@ package ds.sortsearch.intv;
 public class SmallestSnippet {
 	public static void main(String[] args){
 		// w1: 1, w2: 2, w3: 3
-		// 0 w1 5 w3 w2 4 w1 w3 8 w3 w2 w1 0 w3 w2 
+		 0 w1 5 w3 w2 4 w1 w3 8 w3 w2 w1 0 w3 w2 
+
+		 w1: [1, 6, 9]  w2: [4, 8, 12]    w3: [3, 7, 11]
 	}
 
-	public static String findSnippet(String[] s, int[] a, int[] b, int[] c){
+	/*
+	Analysys:
+	scan w1:
+	for each w1: do a binary Search on  w2 and w3 for the closest element to w1
+	keep track of the min snippet length
+	*/
 
+	public static String findSnippet(String[] s, int[] a, int[] b, int[] c){
+		int i = 0;
+		for(; i < a.length; i++){
+
+		}
 	}
 }
