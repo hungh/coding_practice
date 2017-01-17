@@ -5,6 +5,7 @@ Graph implementation using Adjacency List
 package graph.common;
 
 import java.util.*;
+import java.io.*;
 import ds.Common;
 
 /*
@@ -19,34 +20,38 @@ public class GraphAL {
 	public int nedges;
 	public boolean directed;
 
+	private boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
+	private boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found
+	private int[] parent = new int[MAXV + 1];             // discovery relation
+
 	public static void main(String[] args){
 		GraphAL graph = new GraphAL(false);
-		graph.read_graph();
+		if(args.length > 0){
+			graph.read_graph(args[0]);
+		}else{
+			graph.read_graph();	
+		}
 		graph.print_graph();
 		graph.bfs(1);
+		Common.log("-----PATH (node 1 to node 5)-----");
+		graph.find_path(1, 5);
+		Common.log("");
 	}
 
 	public GraphAL(boolean directed) {
 		this.directed = directed;
 	}
 
+	public void read_graph(String filePath){
+		try{
+			scanInput(new Scanner(new File(filePath)), false);
+		}catch(FileNotFoundException e){
+			Common.log(e.getMessage());
+		}
+	}
 
 	public void read_graph (){
-		int m, // number of edges;
-		x, y; // vertices in edge (x, y)
-
-		Scanner sc = new Scanner(System.in);
-		Common.log("Number of Vertices and Edged:");
-		nvertices = sc.nextInt();		
-		m = sc.nextInt();
-
-		for(int i = 1; i <= m; i++){
-			Common.log("Enter an edge by 2 numbers:");
-			x = sc.nextInt();
-			y = sc.nextInt();
-			insert_edge(x, y, directed);
-		}
-		sc.close();
+		scanInput(new Scanner(System.in), true);
 	}
 
 	public void insert_edge(int x, int y, boolean _directed){
@@ -77,10 +82,6 @@ public class GraphAL {
 	}
 
 	public void bfs(int start){
-		boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
-		boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found
-		int[] parent = new int[MAXV + 1];             // discovery relation
-
 		LinkedList<Integer> q = new LinkedList<Integer>();
 		int i,
 		v, // current vertex
@@ -119,4 +120,31 @@ public class GraphAL {
 	public void process_edge(int x, int y){
 		Common.log("\tprocessed edge (" + x + "," + y + ")");	
 	}
+
+	public void find_path(int start, int end){
+		if( (start == end) || (end == -1) ) {
+			Common._log(start + " ");
+		} else {
+			Common._log(end + " ");
+			find_path(start, parent[end]);
+		}
+	}
+
+	private void scanInput(Scanner sc, boolean showLogs){
+		int m, // number of edges;
+		x, y; // vertices in edge (x, y)
+
+		if(showLogs) Common.log("Number of Vertices and Edges:");
+		nvertices = sc.nextInt();		
+		m = sc.nextInt();
+
+		for(int i = 1; i <= m; i++){
+			if(showLogs)  Common.log("Enter an edge by 2 numbers:");
+			x = sc.nextInt();
+			y = sc.nextInt();
+			insert_edge(x, y, directed);
+		}
+		sc.close();
+	}
+	
 }
