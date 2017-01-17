@@ -19,9 +19,9 @@ public class GraphAL {
 	public int nedges;
 	public boolean directed;
 
-	private boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
-	private boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found
-	private int[] parent = new int[MAXV + 1];             // discovery relation
+	protected boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
+	protected boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found	
+	protected int[] parent = new int[MAXV + 1];             // discovery relation
 
 	public static void main(String[] args){
 		GraphAL graph = new GraphAL(false);
@@ -112,13 +112,13 @@ public class GraphAL {
 		}
 	}
 
-	public void process_vertex_late(int v) { //TODO:
+	protected void process_vertex_late(int v) { //TODO:
 	}
 
-	public void process_vertex_early(int v){
+	protected void process_vertex_early(int v){
 		Common.log("processed vertex " + v);
 	}
-	public void process_edge(int x, int y){
+	protected void process_edge(int x, int y){
 		Common.log("\tprocessed edge (" + x + "," + y + ")");	
 	}
 
