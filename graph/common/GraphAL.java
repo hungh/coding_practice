@@ -7,7 +7,6 @@ package graph.common;
 import java.util.*;
 import java.io.*;
 import ds.Common;
-
 /*
 Converted into Java from C code in Skiena Algorithm Design Manual (Chapter 5)
 */
@@ -31,11 +30,13 @@ public class GraphAL {
 		}else{
 			graph.read_graph();	
 		}
+		// int noComponents = graph.connected_components();
+		// Common.log("The number of connected components=" + noComponents);
 		graph.print_graph();
 		graph.bfs(1);
 		Common.log("-----PATH (node 1 to node 5)-----");
 		graph.find_path(1, 5);
-		Common.log("");
+		Common.log("");		
 	}
 
 	public GraphAL(boolean directed) {
@@ -128,6 +129,22 @@ public class GraphAL {
 			Common._log(end + " ");
 			find_path(start, parent[end]);
 		}
+	}
+
+	/*
+	Find the number of connected components in a set of vertices
+	Returns the components number and its vertices to which component they belong 
+	*/
+	public int connected_components(){
+		int c = 0; // component number
+		for(int i = 1; i <= nvertices; i++){
+			if(! discovered[i]) {
+				c++;
+				bfs(i);
+				Common.log("");
+			}
+		}
+		return c;
 	}
 
 	private void scanInput(Scanner sc, boolean showLogs){
