@@ -23,6 +23,20 @@ public class GraphAL {
 	protected boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found	
 	protected int[] parent = new int[MAXV + 1];             // discovery relation
 
+	protected int time; // used for dfs
+	protected boolean finished;
+	protected int[] entry_time = new int[MAXV + 1];
+	protected int[] exit_time = new int[MAXV + 1];
+
+	public void reset(){
+		for(int i = 1; i <= nvertices; i++){
+			processed[i] = false;
+			discovered[i] = false;
+		}
+		finished = false;
+		time = 0;
+	}
+
 	public static void main(String[] args){
 		GraphAL graph = new GraphAL(false);
 		if(args.length > 0){
@@ -36,7 +50,10 @@ public class GraphAL {
 		graph.bfs(1);
 		Common.log("-----PATH (node 1 to node 5)-----");
 		graph.find_path(1, 5);
-		Common.log("");		
+		Common.log("\nDepth First Search...");
+		graph.reset();
+		graph.dfs(1);	
+
 	}
 
 	public GraphAL(boolean directed) {
@@ -110,6 +127,36 @@ public class GraphAL {
 			}
 			process_vertex_late(v);
 		}
+	}
+
+	public void dfs(int v){
+		EdgeNode p;
+		int y;
+
+		if(finished) return;
+		discovered[v] = true;
+		time++;
+		entry_time[v] = time;
+		process_vertex_early(v);
+
+		p = edges[v];
+		while(p != null){
+			y = p.y;
+			if(!discovered[y]){
+				parent[y] = v;
+				process_edge(v, y);
+				dfs(y);
+			} else if(!processed[y] || directed){
+				process_edge(v, y);
+			}
+			if(finished) return;
+			p = p.next;
+		}
+		process_vertex_late(v);
+		time++;
+		exit_time[v] = time;
+		processed[v] = true;
+
 	}
 
 	protected void process_vertex_late(int v) { //TODO:
