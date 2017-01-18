@@ -1,3 +1,8 @@
+package ds.sortsearch;
+
+import ds.Common;
+
+
 public class BasicSortSearch {
   public static void main(String[] args) {
     int[] a = {0, 4, 3, 5, 3, 2, 8, 9, 2, 8};
@@ -10,7 +15,7 @@ public class BasicSortSearch {
 
   public static void print(int[] a){
     for(int e: a) System.out.print(" " + e);
-    System.out.println();
+    Common.log("");
   }
 
   // incremental selection sort
