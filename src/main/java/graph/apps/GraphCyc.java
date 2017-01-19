@@ -5,7 +5,6 @@ Finding  cycles in a graph
 package graph.apps;
 
 import graph.common.GraphAL;
-import graph.common.EdgeNode;
 import ds.Common;
 
 /*
@@ -33,37 +32,5 @@ public class GraphCyc extends GraphAL {
 			finished = true;
 		}
 	}
-
-	@Override
-	public void dfs(int v){
-		EdgeNode p;
-		int y;
-
-		if(finished) return;
-		discovered[v] = true;
-		time++;
-		entry_time[v] = time;
-		process_vertex_early(v);
-
-		p = edges[v];
-		while(p != null){
-			y = p.y;
-			if(!discovered[y]){
-				parent[y] = v;
-				process_edge(v, y);
-				dfs(y);
-			} else if(!processed[y] || directed){
-				process_edge(v, y);
-			}
-			if(finished) return;
-			p = p.next;
-		}
-		process_vertex_late(v);
-		time++;
-		exit_time[v] = time;
-		processed[v] = true;
-
-	}
-
 
 }
