@@ -11,6 +11,15 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/resources"
+            include "*.properties", "*.txt"
+        }
+    }
+}
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.
@@ -33,11 +42,10 @@ dependencies {
 def myMainClass = System.getProperty('main')
 
 if(!myMainClass) {
-    mainClassName = "Library"
-} else{
-    println "Running" + myMainClass
-    mainClassName = myMainClass
+    myMainClass = "Library"
 }
+
+mainClassName = myMainClass
 
 task wrapper(type: Wrapper){
     gradleVersion = "3.2.1"

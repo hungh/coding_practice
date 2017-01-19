@@ -32,6 +32,7 @@ public class GraphAL {
 		for(int i = 1; i <= nvertices; i++){
 			processed[i] = false;
 			discovered[i] = false;
+			parent[i] = -1;
 		}
 		finished = false;
 		time = 0;
@@ -61,11 +62,7 @@ public class GraphAL {
 	}
 
 	public void read_graph(String filePath){
-		try{
-			scanInput(new Scanner(new File(filePath)), false);
-		}catch(FileNotFoundException e){
-			Common.log(e.getMessage());
-		}
+		scanInput(new Scanner(GraphAL.class.getResourceAsStream(filePath), "UTF-8"), false);
 	}
 
 	public void read_graph (){
