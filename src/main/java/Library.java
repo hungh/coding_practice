@@ -5,6 +5,11 @@
  * @author tmc, @date 1/18/17 9:31 AM
  */
 public class Library {
+	
+    public static void main(String[] args){
+	    System.out.println("Welcome to Algorithms and Data Structures!");
+    }
+
     public boolean someLibraryMethod() {
         return true;
     }

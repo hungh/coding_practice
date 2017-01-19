@@ -33,7 +33,7 @@ dependencies {
 def myMainClass = System.getProperty('main')
 
 if(!myMainClass) {
-    println "Please enter the path to main class";
+    mainClassName = "Library"
 } else{
     println "Running" + myMainClass
     mainClassName = myMainClass
