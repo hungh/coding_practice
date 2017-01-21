@@ -1,9 +1,9 @@
-
+package ds.dict;
 
 public class Dict1 {
   // Reference : http://stackoverflow.com/questions/1050253/help-me-understand-this-programming-pearls-bitsort-program
 
-  private static final int BITSPERWORD = 32;
+//  private static final int BITSPERWORD = 32;
 	private static final int SHIFT = 5;
 	private static final int MASK = 0x1F;
 	private static final int N = 10000000;

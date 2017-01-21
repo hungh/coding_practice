@@ -1,3 +1,5 @@
+package ds.dict;
+
 import java.util.*;
 
 // Problem 3-11 in The Algorithm Design and Manual
@@ -47,7 +49,7 @@ public class MinRange {
 		if(root == null) return Integer.MAX_VALUE;
 
 		if(root.s == s && root.e == e) return root.min;
-		int middle = s + (e - s)/2;
+//		int middle = s + (e - s)/2;
 		int r_middle = root.s +  (root.e - root.s)/2;
 		// if the range falls into the left
 		if (root.s <= s && e <= r_middle) {
