@@ -12,12 +12,6 @@ Skiena Algoritm Design and Manual (C -> Java)
 */
 public class GraphArticulate extends GraphAL {
 
-	public static final int TREE = 0;
-	public static final int BACK = 1;
-	public static final int FORWARD = 2;
-	public static final int CROSS = 3;
-	public static final int UNKNOWN_EDGE = -1;
-
 	protected int[] reachable_ancestor = new int[GraphAL.MAXV + 1];
 	protected int[] tree_out_degree = new int[GraphAL.MAXV + 1];
 
@@ -86,14 +80,5 @@ public class GraphArticulate extends GraphAL {
 			reachable_ancestor[parent[v]] = reachable_ancestor[v];
 		}
 
-	}
-
-
-	public int edge_classification(int x, int y){
-		if(parent[y] == x) return TREE;
-		if(discovered[y] && ! processed[y]) return BACK;
-		if(processed [y] && (entry_time[y] > entry_time[x])) return FORWARD;
-		if(processed [y] && (entry_time[y] < entry_time[x])) return CROSS;
-		return UNKNOWN_EDGE;
 	}
 }

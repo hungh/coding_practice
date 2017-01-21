@@ -19,6 +19,14 @@ public class GraphAL {
 	public int nedges;
 	public boolean directed;
 
+	// edge types
+	protected int TREE = 0;
+	protected int BACK = 1;
+	protected int FORWARD = 2;
+	protected int CROSS = 3;
+	protected int UNKNOWN_EDGE = -1;
+	//
+
 	protected boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
 	protected boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found	
 	protected int[] parent = new int[MAXV + 1];             // discovery relation
@@ -189,6 +197,14 @@ public class GraphAL {
 			}
 		}
 		return c;
+	}
+
+	public int edge_classification(int x, int y){
+		if(parent[y] == x) return TREE;
+		if(discovered[y] && ! processed[y]) return BACK;
+		if(processed [y] && (entry_time[y] > entry_time[x])) return FORWARD;
+		if(processed [y] && (entry_time[y] < entry_time[x])) return CROSS;
+		return UNKNOWN_EDGE;
 	}
 
 	private void scanInput(Scanner sc, boolean showLogs){
