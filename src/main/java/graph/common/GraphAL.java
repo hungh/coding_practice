@@ -36,6 +36,14 @@ public class GraphAL {
 	protected int[] entry_time = new int[MAXV + 1];
 	protected int[] exit_time = new int[MAXV + 1];
 
+	public void hard_reset(){
+		for(int i = 1; i <= nvertices; i++) {
+			edges[i] = null;
+			degree[i] = 0;
+		}
+		reset();
+	}
+
 	public void reset(){
 		for(int i = 1; i <= nvertices; i++){
 			processed[i] = false;
