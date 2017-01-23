@@ -17,7 +17,7 @@ public class StronglyCCGraph extends GraphAL {
 
 	public static void main(String[] args){
 		StronglyCCGraph graph = new StronglyCCGraph(true);
-		graph.read_graph("/strong_cc_graph.txt");
+		graph.read_graph("/strong_cc_graph.txt"); // Graph take from Figure 5.16 (page 182)
 		graph.strong_components();
 		graph.print_components();
 	}
@@ -54,7 +54,7 @@ public class StronglyCCGraph extends GraphAL {
 				low[x] = y;
 
 		if(edge_type == CROSS)
-			if(scc [y] == -1) // component that ha sy not yet assigned
+			if(scc [y] == -1) // component that has not yet assigned
 				if(entry_time[y] < entry_time[low[x]])
 						low[x]  =y;
 
@@ -88,13 +88,13 @@ public class StronglyCCGraph extends GraphAL {
 		StringBuilder buf;
 		for(int i = 1; i <= nvertices; i++){
 			buf = componentMap.get(scc[i]);
-			if(buf != null){
-				buf.append(" ").append(i);
-				componentMap.put(scc[i], buf);
+			if(buf == null){
+				buf = new StringBuilder();
 			}
+			componentMap.put(scc[i], buf.append(" ").append(i));
 		}
 		for(Map.Entry<Integer, StringBuilder> ev: componentMap.entrySet()){
-			Common.log("Component :" + ev.getKey());
+			Common.log("Component " + ev.getKey() + " has :");
 			Common.log("\t " + ev.getValue());
 		}
 	}
