@@ -12,10 +12,13 @@ public class TopoSorting extends GraphAL {
 	protected LinkedList<Integer> sorted;
 
 	public static void main(String[] args){
-		TopoSorting graph = new TopoSorting(true);
-		graph.read_graph("/grapha.txt");
-		graph.reset();
-		graph.topsort();
+		new TopoSorting(true).test("/grapha.txt");
+	}
+
+	public void test(String fileName){
+		read_graph(fileName);
+		reset();
+		topsort();
 	}
 
 	public TopoSorting(boolean directed){
@@ -33,7 +36,7 @@ public class TopoSorting extends GraphAL {
 		edge_type = edge_classification(x, y);
 
 		if(edge_type == BACK){
-			Common.log("Warning: directed cycle found, not a DAG");
+			Common.log("Warning: directed cycle found, not a DAG (" + x + "," + y + ")");
 		}
 
 	}
