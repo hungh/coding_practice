@@ -46,14 +46,19 @@ def getFullPkg (String _className){
     def dirPrefix = 'build/classes/main'
     def className = _className + ".class";
     def pathToMain = new File(dirPrefix)
-    def retPath, i = 0
+    def retPath, i = 0, list = []
     pathToMain.eachFileRecurse (FileType.FILES) { file ->
         if(file.getName().indexOf(className) >= 0)  {
             retPath = file.getPath().substring(dirPrefix.length() + 1);            
+            list.add(retPath)
             i++;
         }
     }
-    if(i > 1) println "WARN: there is more than 1 match for $_className"
+    if(i > 1) println "WARN: there is more than 1 match for $_className : $list"
+    if(!retPath) {
+        println "ERROR: unable to find a match for ($_className)"
+        return "Library"
+    }
     return retPath.replace("/", ".").substring(0, retPath.length() - 6);
 }
 
