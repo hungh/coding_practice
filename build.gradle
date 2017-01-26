@@ -56,8 +56,8 @@ def getFullPkg (String _className){
     }
     if(i > 1) println "WARN: there is more than 1 match for $_className : $list"
     if(!retPath) {
-        println "ERROR: unable to find a match for ($_className)"
-        return "Library"
+        println "WARN: unable to find a match for ($_className). Using the original name"
+        return _className
     }
     return retPath.replace("/", ".").substring(0, retPath.length() - 6);
 }
