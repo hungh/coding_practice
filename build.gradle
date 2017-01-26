@@ -7,9 +7,12 @@
  * user guide available at https://docs.gradle.org/3.1/userguide/tutorial_java_projects.html
  */
 
+import groovy.io.FileType
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'application'
+
+
 
 sourceSets {
     main {
@@ -39,9 +42,26 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+def getFullPkg (String _className){
+    def dirPrefix = 'build/classes/main'
+    def className = _className + ".class";
+    def pathToMain = new File(dirPrefix)
+    def retPath, i = 0
+    pathToMain.eachFileRecurse (FileType.FILES) { file ->
+        if(file.getName().indexOf(className) >= 0)  {
+            retPath = file.getPath().substring(dirPrefix.length() + 1);            
+            i++;
+        }
+    }
+    if(i > 1) println "WARN: there is more than 1 match for $_className"
+    return retPath.replace("/", ".").substring(0, retPath.length() - 6);
+}
+
 def myMainClass = System.getProperty('main')
 
-if(!myMainClass) {
+if(myMainClass) {
+    myMainClass = getFullPkg(myMainClass)
+}else{
     myMainClass = "Library"
 }
 
