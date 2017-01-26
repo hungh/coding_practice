@@ -8,11 +8,11 @@ import java.util.*;
 import ds.Common;
 import graph.apps.TopoSorting;
 
-public class TopoSorting5D2 extends TopoSorting { // TODO: not correct 
+public class TopoSorting5D2 extends TopoSorting { 
 	private static Map<Integer, Character> vertexMap = new HashMap<Integer, Character>();
 
 	static {
-		int j = 0;
+		int j = 1;
 		for(char i = 'A'; i <= 'J'; i++){
 			vertexMap.put(j++, i);
 		}
@@ -31,8 +31,10 @@ public class TopoSorting5D2 extends TopoSorting { // TODO: not correct
 	@Override
 	public void print_stack() {
 		if(sorted == null) return;
+		int p;
 		while(!sorted.isEmpty()){
-			Common._log(" " + vertexMap.get(sorted.pop()));
+			p = sorted.pop();
+			Common._log(" " + '(' + p + ';' + vertexMap.get(p) + ')');
 		}
 		Common.log("");
 	}
