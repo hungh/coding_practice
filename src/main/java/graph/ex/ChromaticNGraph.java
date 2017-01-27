@@ -30,6 +30,7 @@ public class ChromaticNGraph extends ColorGraph { //TODO: Please see Euler (V - 
 		Common.log("Computing...");
 		ChromaticNGraph graph = new ChromaticNGraph(false);
 		graph.read_graph("/graph5D12.txt"); // this graph has degree of 5
+		// graph.read_graph("/graph5d4.txt");  // degree at most 2
 		graph.compute();
 		graph.printColors();
 		Common.log("Chromatic Number=" + graph.getChromaticNumber());
@@ -66,20 +67,28 @@ public class ChromaticNGraph extends ColorGraph { //TODO: Please see Euler (V - 
 	@Override
 	public void process_vertex_late(int v) { 
 		// color the uncolored vertices (after discovering all v's neighbors)
-		int i = Color.WHITE.toInt();
+		int i;
 		int vtx, clr;
 		Map<Integer, Object> clrMap = new HashMap<Integer, Object>();		
-		for(Map.Entry<Integer, Integer> kv: vtxClrMap.entrySet()) 	if(kv.getValue() >= 0) clrMap.put(kv.getValue(), null);
+		EdgeNode p;
 
 		for(Map.Entry<Integer, Integer> kv: vtxClrMap.entrySet()){
+			i = Color.WHITE.toInt();
+			clrMap.clear();
 			vtx = kv.getKey();
 			clr = kv.getValue();
 
-			if(clr == Color.UNCOLORED.toInt()) { // uncolored vertex
+			if(clr == Color.UNCOLORED.toInt()) { // uncolored vertex				
+				// look into v's neighbors' colors
+				p = edges[vtx];
+				while(p != null) {
+					if(color[p.y] != Color.UNCOLORED.toInt()) clrMap.put(color[p.y] , null);
+					p = p.next;
+				}
+
 				while(clrMap.containsKey(i)) i++;
 				if(i >= MAX_COLOR) throw new IllegalArgumentException("Invalid map");
-				clrMap.put(i, null);
-				color[vtx] = i++; // the next one can't be i, therefore increase i by 1
+				color[vtx] = i; 
 			}
 		}
 	}
