@@ -10,7 +10,7 @@ public class ColorGraph extends GraphAL {
 	public static final int BLACK = 1;
 	public static final int UNCOLORED = -1;
 
-	private int[] color = new int[GraphAL.MAXV + 1];
+	public int[] color = new int[GraphAL.MAXV + 1];
 	private boolean bipartite = true;
 
 	public static void main(String[] args){
