@@ -6,65 +6,95 @@ Must such graph be bipartite?
 
 package graph.ex;
 
+import java.util.*;
+
 import ds.Common;
 import graph.apps.ColorGraph;
+import graph.common.Color;
 import graph.common.GraphAL;
+import graph.common.EdgeNode;
 
-public class ChromaticNGraph extends ColorGraph { //TODO: Please see Euler (V - E + F = 2 for planar graph)
+/*
+Greedy Algorithm 
+*/
+public class ChromaticNGraph extends ColorGraph { //TODO: Please see Euler (V - E + F = 2 for planar graph) 
+												  // http://web.math.princeton.edu/math_alive/5/Notes2.pdf
 	private static final int MAX_COLOR = 6;
 	protected int[] colors = new int[GraphAL.MAXV + 1];
-	protected int[] color_types = new int[MAX_COLOR]; // planar graph does not have more than 6
+	protected Map<Integer, Integer> vtxClrMap = new HashMap<Integer, Integer>() ; 
 
 	public ChromaticNGraph(boolean directed){
 		super(directed);
 	}
 	public static void main(String[] args){
 		Common.log("Computing...");
-		ChromaticNGraph graph = new ChromaticNGraph(true);
-		graph.read_graph("/graph5D12.txt");
+		ChromaticNGraph graph = new ChromaticNGraph(false);
+		graph.read_graph("/graph5D12.txt"); // this graph has degree of 5
 		graph.compute();
 		graph.printColors();
+		Common.log("Chromatic Number=" + graph.getChromaticNumber());
 	}
 
 	public void compute(){
-		for(int i = 1; i < nvertices; i++){
-			if(!discovered[i]) {
-				color[i] = color_types[0]; 
-				bfs(i);
-			}
-		}
+		init();
+		color[1] = Color.WHITE.toInt();
+		bfs(1);
 	}
 
 	public void init() {
-		int i;		
-		for(i = 1; i < MAX_COLOR; i++) color_types[i] = -1;
-		for(i = 1; i <= nvertices; i++) color[i] = UNCOLORED;
+		for(int i = 1; i <= nvertices; i++) color[i] = Color.UNCOLORED.toInt();
+	}
+	
+	@Override
+	public void process_vertex_early(int v){
+		vtxClrMap.clear();
+		if(color[v] != Color.UNCOLORED.toInt()){
+			vtxClrMap.put(v, color[v]);
+		}		
 	}
 
+	@Override
+	public void process_edge(int x, int y){						
+		vtxClrMap.put(y, color[y]); // will color y later if it has not been colored yet.
+	}
 
 	@Override
-	public void process_edge(int x, int y){
-		if(color[x] == color[y]){  
-			// introduce a new color
-			if(color[x] < color_types.length - 1){
-				color[y] = color[x] + 1;
-				color_types[color[y]] = color[y];	
-			} else{
-				Common.log("Unable to use an extra color");
-			}			
-		}else{
-			// pick up the lowest color that has not been picked by x
-			for(int i = 0; i < MAX_COLOR; i++) 
-				if(i != color[x]) {
-					color[y] = i;
-					return;
-				}
+	public void after_checking_aneighbor(int v, int y){
+		if(color[y] != Color.UNCOLORED.toInt()) vtxClrMap.put(y, color[y]); // y was colored, update v's neighbors			
+	}
+
+	@Override
+	public void process_vertex_late(int v) { 
+		// color the uncolored vertices (after discovering all v's neighbors)
+		int i = Color.WHITE.toInt();
+		int vtx, clr;
+		Map<Integer, Object> clrMap = new HashMap<Integer, Object>();		
+		for(Map.Entry<Integer, Integer> kv: vtxClrMap.entrySet()) 	if(kv.getValue() >= 0) clrMap.put(kv.getValue(), null);
+
+		for(Map.Entry<Integer, Integer> kv: vtxClrMap.entrySet()){
+			vtx = kv.getKey();
+			clr = kv.getValue();
+
+			if(clr == Color.UNCOLORED.toInt()) { // uncolored vertex
+				while(clrMap.containsKey(i)) i++;
+				if(i >= MAX_COLOR) throw new IllegalArgumentException("Invalid map");
+				clrMap.put(i, null);
+				color[vtx] = i++; // the next one can't be i, therefore increase i by 1
+			}
 		}
 	}
 
 	public void printColors(){
 		for(int i = 1; i <= nvertices; i++) {
-			Common._log ("vertext [" + i + "] color=" + color[i] + ", ");
+			Common.log ("vertext [" + i + "] = " + Color.stringValue(color[i]));
 		}
+	}
+
+	public int getChromaticNumber(){
+		int max = -1;
+		for(int i = 0; i < MAX_COLOR; i++) {
+			if(color[i] > max) max = color[i];
+		}
+		return max + 1;
 	}
 }

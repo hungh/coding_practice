@@ -1,14 +1,12 @@
 
 package graph.apps;
 
+import graph.common.Color;
 import graph.common.GraphAL;
 import ds.Common;
 
 
 public class ColorGraph extends GraphAL {
-	public static final int WHITE = 0;
-	public static final int BLACK = 1;
-	public static final int UNCOLORED = -1;
 
 	public int[] color = new int[GraphAL.MAXV + 1];
 	private boolean bipartite = true;
@@ -28,10 +26,10 @@ public class ColorGraph extends GraphAL {
 	}
 
 	public boolean twocolor(){
-		for(int i = 1; i <= nvertices; i++) color[i] = UNCOLORED;
+		for(int i = 1; i <= nvertices; i++) color[i] = Color.UNCOLORED.toInt();
 		for(int i = 1; i < nvertices; i++){
 			if(!discovered[i]) {
-				color[i] = WHITE; 
+				color[i] = Color.WHITE.toInt(); 
 				bfs(i);
 			}
 		}
@@ -53,8 +51,8 @@ public class ColorGraph extends GraphAL {
 	}
 
 	private static int complement(int colorx){
-		if(colorx == WHITE) return BLACK;
-		if(colorx == BLACK) return WHITE;
-		return UNCOLORED;
+		if(colorx == Color.WHITE.toInt()) return Color.BLACK.toInt();
+		if(colorx == Color.BLACK.toInt()) return Color.WHITE.toInt();
+		return Color.UNCOLORED.toInt();
 	}
 }

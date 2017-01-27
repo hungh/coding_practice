@@ -137,6 +137,8 @@ public class GraphAL {
 					parent[y] = v;
 				}
 				p = p.next;
+
+				after_checking_aneighbor(v, y);
 			}
 			process_vertex_late(v);
 		}
@@ -170,6 +172,9 @@ public class GraphAL {
 		exit_time[v] = time;
 		processed[v] = true;
 
+	}
+
+	protected void after_checking_aneighbor(int v, int y){ //TODO:
 	}
 
 	protected void process_vertex_late(int v) { //TODO:
