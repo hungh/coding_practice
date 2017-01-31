@@ -14,16 +14,12 @@ import java.util.*;
 
 import ds.Common;
 import ds.tree.Tree;
-import ds.tree.TreeToList;
 
 public class RebuildBinTree {
 
 	private Map<Integer, Integer> postMap = new HashMap<Integer, Integer>();
-
 	private int[] pre;
 	private int[] post;
-	private int l;
-
 
 	public RebuildBinTree(int[] pre, int[] post){
 		this.pre = pre;
@@ -41,7 +37,14 @@ public class RebuildBinTree {
 
 		RebuildBinTree rtree = new RebuildBinTree(pre, post);
 		Tree root = rtree.rebuild(0, rtree.getPostMap().get(pre[0]), 0, post.length - 1);
-		TreeToList.printTreeAsList(root);
+
+		List<Integer> preOut = new ArrayList<Integer>();
+		preOrder(root, preOut);
+		Common.log(preOut);
+		
+		List<Integer> postOut = new ArrayList<Integer>();
+		inOrder(root, postOut);
+		Common.log(postOut);
 	}
 
 	public void init () {
@@ -56,58 +59,43 @@ public class RebuildBinTree {
 	'pre': array as the result of a pre-order traversal
 	'post': array as the result of a post-order traversal
 	*/
-	public Tree rebuild (int rootPosPre, int rootPosPost, int posStart, int posEnd){
-
-		Common.log("[" + rootPosPre + ", " +  rootPosPost + "]" + "- [" + posStart + ", " + posEnd + "]");
-		 // if(l >= 40) return null;
-		 // l++;
-
-		 if(posStart > rootPosPost ){
-		 	Common.log("Exit early");
-		 	return null;
-
-		 } 
-
-		// if(rootPosPre >= pre.length || rootPosPost >= post.length) return null;
-
-		if(posStart == posEnd) { // leaf node
-			return new Tree(post[posStart]);
-
-		} else if (posStart > posEnd) {
+	public Tree rebuild (int rootPre, int rootPost, int startPost, int endPost){
+		if(startPost > rootPost) return null;
+		if(startPost == endPost)  // leaf node
+			return new Tree(post[startPost]);
+		else if (startPost > endPost) 
 			return null;
-		}
 
-		int rootVal = post[rootPosPost];
-		Tree new_root = new Tree(rootVal);
+		int rootVal = post[rootPost];
+		Tree root = new Tree(rootVal);
 
-		//  next one in pre list
-		int left_root_pos = rootPosPre + 1;
+		int leftChildPre = rootPre + 1;		
+		int numberOfLeftNodes = rootPost - startPost + 1;
 
-		//  next one in the pos list
-		int right_root_pos = postMap.get(rootVal) + 1;
-
-		// how many elements are there on the left sub-tree
-		int numberLeftElems = rootPosPost - posStart;
-
-		int leftRootVal = pre [left_root_pos];
-		int rightRootVal = pre [numberLeftElems + 1];
+		int leftValuePre = pre [leftChildPre];
+		int rightValuePre = pre [rootPre + numberOfLeftNodes];
 
 
-		Tree left = rebuild(left_root_pos, postMap.get(leftRootVal),  posStart, rootPosPost - 1);
-		Tree right = rebuild(numberLeftElems + 1, postMap.get(rightRootVal), rootPosPost + 1, posEnd);
+		Tree left =  rebuild ( leftChildPre, postMap.get(leftValuePre),  startPost, rootPost - 1);
+		Tree right = rebuild ( rootPre + numberOfLeftNodes, postMap.get(rightValuePre), rootPost + 1, endPost);
 
-		if(left != null) {
-			new_root.left = left;
-		} else{
-			Common.log("Left is null");
-		}
-		if(right != null) {
-			new_root.right = right;
-		}else{
-			Common.log("right is null ");
-		}
-		Common.log("new root=" + new_root.value);
-		return new_root;
+		if(left != null)  root.left = left;
+		if(right != null) root.right = right;
+		return root;
 	}
 
+	// for visual testing purpose
+	public static void inOrder(Tree root, List<Integer> out){
+		if(root == null) return ;
+		inOrder(root.left, out);
+		out.add(root.value);
+		inOrder(root.right, out);
+	}
+
+	public static void preOrder(Tree root, List<Integer> out){
+		if(root == null) return ;
+		out.add(root.value);
+		preOrder(root.left, out);		
+		preOrder(root.right, out);		
+	}
 }
