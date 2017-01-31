@@ -19,10 +19,10 @@ import ds.tree.TreeToList;
 public class RebuildBinTree {
 
 	private Map<Integer, Integer> postMap = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> preMap = new HashMap<Integer, Integer>();
 
 	private int[] pre;
 	private int[] post;
+	private int l;
 
 
 	public RebuildBinTree(int[] pre, int[] post){
@@ -40,18 +40,13 @@ public class RebuildBinTree {
 		int[] post = new int[] {4, 2, 7, 5, 8, 1, 3, 6};
 
 		RebuildBinTree rtree = new RebuildBinTree(pre, post);
-		Tree root = rtree.rebuild(0, rtree.getPostMap().get(0), 0, post.length - 1);
+		Tree root = rtree.rebuild(0, rtree.getPostMap().get(pre[0]), 0, post.length - 1);
 		TreeToList.printTreeAsList(root);
 	}
 
 	public void init () {
-		// map to keep track of post order's elements' posistions
-		Map<Integer, Integer> postMap = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> preMap = new HashMap<Integer, Integer>();
-		int i;
-		for(i = 0; i < post.length; i++) {
+		for(int i = 0; i < post.length; i++) {
 			postMap.put(post[i], i);
-			preMap.put(pre[i], i);
 		}
 	}
 
@@ -63,7 +58,17 @@ public class RebuildBinTree {
 	*/
 	public Tree rebuild (int rootPosPre, int rootPosPost, int posStart, int posEnd){
 
-		if(rootPosPre >= pre.length || rootPosPost >= post.length) return null;
+		Common.log("[" + rootPosPre + ", " +  rootPosPost + "]" + "- [" + posStart + ", " + posEnd + "]");
+		 // if(l >= 40) return null;
+		 // l++;
+
+		 if(posStart > rootPosPost ){
+		 	Common.log("Exit early");
+		 	return null;
+
+		 } 
+
+		// if(rootPosPre >= pre.length || rootPosPost >= post.length) return null;
 
 		if(posStart == posEnd) { // leaf node
 			return new Tree(post[posStart]);
@@ -81,15 +86,27 @@ public class RebuildBinTree {
 		//  next one in the pos list
 		int right_root_pos = postMap.get(rootVal) + 1;
 
+		// how many elements are there on the left sub-tree
+		int numberLeftElems = rootPosPost - posStart;
+
 		int leftRootVal = pre [left_root_pos];
-		int rightRootVal = post [right_root_pos];
+		int rightRootVal = pre [numberLeftElems + 1];
+
 
 		Tree left = rebuild(left_root_pos, postMap.get(leftRootVal),  posStart, rootPosPost - 1);
-		Tree right = rebuild(preMap.get(rightRootVal), right_root_pos, rootPosPost + 1, posEnd);
+		Tree right = rebuild(numberLeftElems + 1, postMap.get(rightRootVal), rootPosPost + 1, posEnd);
 
-		if(left != null)  new_root.left = left;
-		if(right != null) new_root.right = right;
-
+		if(left != null) {
+			new_root.left = left;
+		} else{
+			Common.log("Left is null");
+		}
+		if(right != null) {
+			new_root.right = right;
+		}else{
+			Common.log("right is null ");
+		}
+		Common.log("new root=" + new_root.value);
 		return new_root;
 	}
 
