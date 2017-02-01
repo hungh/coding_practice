@@ -47,6 +47,7 @@ public abstract class Graph {
 	public abstract void process_vertex_late(int v);
 	public abstract void process_vertex_early(int v);
 	public abstract void process_edge(int x, int y);
+	public abstract void hard_reset();
 
 	protected void scanInput(Scanner sc, boolean showLogs){
 		int m, // number of edges;
@@ -63,5 +64,15 @@ public abstract class Graph {
 			insert_edge(x, y, directed);
 		}
 		sc.close();
+	}
+
+	public void reset(){
+		for(int i = 1; i <= nvertices; i++){
+			processed[i] = false;
+			discovered[i] = false;
+			parent[i] = -1;
+		}
+		finished = false;
+		time = 0;
 	}
 }

@@ -23,23 +23,9 @@ public class GraphAL extends Graph {
 		reset();
 	}
 
-	public void reset(){
-		for(int i = 1; i <= nvertices; i++){
-			processed[i] = false;
-			discovered[i] = false;
-			parent[i] = -1;
-		}
-		finished = false;
-		time = 0;
-	}
-
 	public static void main(String[] args){
 		GraphAL graph = new GraphAL(false);
-		if(args.length > 0){
-			graph.read_graph(args[0]);
-		}else{
-			graph.read_graph();	
-		}
+		graph.read_graph("/graph5D12.txt");
 		// int noComponents = graph.connected_components();
 		// Common.log("The number of connected components=" + noComponents);
 		graph.print_graph();
