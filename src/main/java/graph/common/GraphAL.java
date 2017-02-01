@@ -10,32 +10,11 @@ import ds.Common;
 /*
 Converted into Java from C code in Skiena Algorithm Design Manual (Chapter 5)
 */
-public class GraphAL {
-	public static final int MAXV = 1000;
+public class GraphAL extends Graph {
+	public static final int MAXV = Graph.MAXV;
 
 	public EdgeNode[] edges = new EdgeNode[MAXV + 1]; 
-	public int[] degree = new int[MAXV + 1];
-	public int nvertices;
-	public int nedges;
-	public boolean directed;
-
-	// edge types
-	protected int TREE = 0;
-	protected int BACK = 1;
-	protected int FORWARD = 2;
-	protected int CROSS = 3;
-	protected int UNKNOWN_EDGE = -1;
-	//
-
-	protected boolean[] processed = new boolean[MAXV + 1];  // which vertices have been processed
-	protected boolean[] discovered = new boolean[MAXV + 1]; // which vertices have been found	
-	protected int[] parent = new int[MAXV + 1];             // discovery relation
-
-	protected int time; // used for dfs
-	protected boolean finished;
-	protected int[] entry_time = new int[MAXV + 1];
-	protected int[] exit_time = new int[MAXV + 1];
-
+	
 	public void hard_reset(){
 		for(int i = 1; i <= nvertices; i++) {
 			edges[i] = null;
@@ -77,14 +56,7 @@ public class GraphAL {
 		this.directed = directed;
 	}
 
-	public void read_graph(String filePath){
-		scanInput(new Scanner(GraphAL.class.getResourceAsStream(filePath), "UTF-8"), false);
-	}
-
-	public void read_graph (){
-		scanInput(new Scanner(System.in), true);
-	}
-
+	@Override
 	public void insert_edge(int x, int y, boolean _directed){
 		EdgeNode p = new EdgeNode();
 		p.y = y;
@@ -99,6 +71,7 @@ public class GraphAL {
 		}
 	}
 
+	@Override
 	public void print_graph(){
 		EdgeNode p;
 		for(int i = 1; i <= nvertices; i++){
@@ -112,6 +85,7 @@ public class GraphAL {
 		}
 	}
 
+	@Override
 	public void bfs(int start){
 		LinkedList<Integer> q = new LinkedList<Integer>();
 		int i,
@@ -144,6 +118,7 @@ public class GraphAL {
 		}
 	}
 
+	@Override
 	public void dfs(int v){
 		EdgeNode p;
 		int y;
@@ -177,13 +152,17 @@ public class GraphAL {
 	protected void after_checking_aneighbor(int v, int y){ //TODO:
 	}
 
-	protected void process_vertex_late(int v) { //TODO:
+	@Override
+	public void process_vertex_late(int v) { //TODO:
 	}
 
-	protected void process_vertex_early(int v){
+	@Override
+	public void process_vertex_early(int v){
 		Common.log("processed vertex " + v);
 	}
-	protected void process_edge(int x, int y){
+
+	@Override
+	public void process_edge(int x, int y){
 		Common.log("\tprocessed edge (" + x + "," + y + ")");	
 	}
 
@@ -219,22 +198,4 @@ public class GraphAL {
 		if(processed [y] && (entry_time[y] < entry_time[x])) return CROSS;
 		return UNKNOWN_EDGE;
 	}
-
-	private void scanInput(Scanner sc, boolean showLogs){
-		int m, // number of edges;
-		x, y; // vertices in edge (x, y)
-
-		if(showLogs) Common.log("Number of Vertices and Edges:");
-		nvertices = sc.nextInt();		
-		m = sc.nextInt();
-
-		for(int i = 1; i <= m; i++){
-			if(showLogs)  Common.log("Enter an edge by 2 numbers:");
-			x = sc.nextInt();
-			y = sc.nextInt();
-			insert_edge(x, y, directed);
-		}
-		sc.close();
-	}
-	
 }
