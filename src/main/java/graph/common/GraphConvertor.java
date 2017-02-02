@@ -24,12 +24,17 @@ public class GraphConvertor {
 		GraphAM gm = new GraphAM(false);
 		gm.read_graph("/graph5D12.txt");
 
-		// gm.print_graph();
+		gm.print_graph();
 
 		GraphAL gl = convertor.convertTo(gm);
 		gl.print_graph();
 
-		// gl.bfs(1);
+		Common.log("****** Breath first search");
+		gl.bfs(1);
+
+		gl.reset();
+		Common.log("***** Depth first search");
+		gl.dfs(1);
 	}
 
 	public GraphConvertor(boolean directed){
@@ -50,7 +55,11 @@ public class GraphConvertor {
 
 		for(i = 1; i <= gm.getNVertices(); i++){
 			for(j = 1; j <= gm.getNVertices(); j++){
-				if( m[i][j] > 0) gl.insert_edge(i, j, directed);
+				if( m[i][j] == 1) {
+					gl.insert_edge(i, j, directed);
+					if(!directed) m[j][i] = 2;					
+				} 
+				if(m[i][j] == 2) m[i][j] = 1; // restore the original value
 			}
 		}
 		return gl;
