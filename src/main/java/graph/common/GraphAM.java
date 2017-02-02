@@ -30,6 +30,10 @@ public class GraphAM  extends Graph {
 		this.directed = directed;
 	}
 
+	public int[][] getMatrix() {
+		return this.m;
+	}
+
 	@Override
 	public void insert_edge(int x, int y, boolean _directed){
 		if(m == null){

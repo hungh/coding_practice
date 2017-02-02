@@ -40,6 +40,14 @@ public abstract class Graph {
 		scanInput(new Scanner(System.in), true);
 	}
 
+	public int getNVertices() {
+		return nvertices;
+	}
+
+	public void setNVertices(int nvertices){
+		this.nvertices = nvertices;
+	}
+
 	public abstract void insert_edge(int x, int y, boolean _directed);
 	public abstract void print_graph();
 	public abstract void bfs(int start);

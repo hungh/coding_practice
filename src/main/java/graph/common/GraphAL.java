@@ -26,8 +26,6 @@ public class GraphAL extends Graph {
 	public static void main(String[] args){
 		GraphAL graph = new GraphAL(false);
 		graph.read_graph("/graph5D12.txt");
-		// int noComponents = graph.connected_components();
-		// Common.log("The number of connected components=" + noComponents);
 		graph.print_graph();
 		graph.bfs(1);
 		Common.log("-----PATH (node 1 to node 5)-----");
@@ -40,6 +38,10 @@ public class GraphAL extends Graph {
 
 	public GraphAL(boolean directed) {
 		this.directed = directed;
+	}
+
+	public EdgeNode[] getEdges(){
+		return this.edges;
 	}
 
 	@Override
