@@ -37,7 +37,7 @@ public class GraphAM  extends Graph {
 	@Override
 	public void insert_edge(int x, int y, boolean _directed){
 		if(m == null){
-			m = new int[nvertices + 2][nvertices + 2];
+			m = new int[nvertices + 1][nvertices + 1];
 		}
 		m[x][y] = 1;
 

@@ -11,6 +11,7 @@ public abstract class Graph {
 
 	public int[] degree = new int[MAXV + 1];
 	public int nvertices;
+	public int provided_nedges;
 	public int nedges;
 	public boolean directed;
 
@@ -64,6 +65,7 @@ public abstract class Graph {
 		if(showLogs) Common.log("Number of Vertices and Edges:");
 		nvertices = sc.nextInt();		
 		m = sc.nextInt();
+		provided_nedges = m;
 
 		for(int i = 1; i <= m; i++){
 			if(showLogs)  Common.log("Enter an edge by 2 numbers:");
