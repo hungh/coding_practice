@@ -19,7 +19,7 @@ public class GraphIM extends Graph {
 		this(false); // for now, only support undirected graph
 	}
 
-	private GraphIM (boolean directed){
+	public GraphIM (boolean directed){
 		this.directed = directed;
 		this.nedges = 1;
 	}
@@ -41,19 +41,18 @@ public class GraphIM extends Graph {
 	@Override
 	public void insert_edge(int x, int y, boolean _directed){
 		if(m == null){
-			m = new int[nvertices + 1][provided_nedges + 1];
+			Common.log("init matrix");
+			m = new int[nvertices + 1][Graph.MAXV + 1]; 
 		}
 		m[x][nedges] = 1;
 		m[y][nedges] = 1;
-
 		nedges++;
-		
 	}
 
 	@Override
 	public void print_graph(){
 		for(int i = 1; i <= nvertices; i++){
-			for(int j = 1; j <= provided_nedges; j++){
+			for(int j = 1; j <= this.getProvided_nedges(); j++){
 				Common._log(" " +  m[i][j]);
 			}
 			Common.log("");
@@ -78,7 +77,7 @@ public class GraphIM extends Graph {
 			processed[v] = true;			
 		
 			edge = 1;
-			while(edge <= provided_nedges){				
+			while(edge <= this.getProvided_nedges()){				
 				if( m[v][edge] == 0 ) { edge++; continue;}
 
 				y = 1;
@@ -108,7 +107,7 @@ public class GraphIM extends Graph {
 		entry_time[v] = time;
 		process_vertex_early(v);
 
-		while(edge <= provided_nedges){
+		while(edge <= this.getProvided_nedges()){
 			if( m[v][edge] == 0 ) { edge++; continue;}
 			y = 1;
 			while(y <= nvertices &&  ( (m[y][edge] ==  0) || (y == v))) y++;

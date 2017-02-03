@@ -49,6 +49,16 @@ public abstract class Graph {
 		this.nvertices = nvertices;
 	}
 
+	public void setProvided_nedges(int provided_nedges){
+		this.provided_nedges = provided_nedges;
+	}
+
+	public int getProvided_nedges(){
+		return this.provided_nedges;
+	}
+
+	public int getNedges () { return nedges;}
+	
 	public abstract void insert_edge(int x, int y, boolean _directed);
 	public abstract void print_graph();
 	public abstract void bfs(int start);
@@ -65,7 +75,7 @@ public abstract class Graph {
 		if(showLogs) Common.log("Number of Vertices and Edges:");
 		nvertices = sc.nextInt();		
 		m = sc.nextInt();
-		provided_nedges = m;
+		setProvided_nedges (m);
 
 		for(int i = 1; i <= m; i++){
 			if(showLogs)  Common.log("Enter an edge by 2 numbers:");

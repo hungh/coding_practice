@@ -12,9 +12,13 @@ if vertex i is part of edge j, otherwise M[i, j] = 0.
 
 package graph.common;
 
+import java.util.*;
+
 import ds.Common;
+import graph.common.EdgeNode;
 
 public class GraphConvertor {
+	private static final String GRAPH_INIT_ERROR = "graph has not been initialized yet.";
 
 	protected boolean directed;
 
@@ -26,19 +30,56 @@ public class GraphConvertor {
 
 		gm.print_graph();
 
-		GraphAL gl = convertor.convertTo(gm);
-		gl.print_graph();
+		GraphAL gal = convertor.convertTo(gm);
+		gal.print_graph();
 
-		Common.log("****** Breath first search");
-		gl.bfs(1);
+		Common.log("****** 1.Breath first search");
+		gal.bfs(1);
 
-		gl.reset();
-		Common.log("***** Depth first search");
-		gl.dfs(1);
+		gal.reset();
+		Common.log("****** 1.Depth first search");
+		gal.dfs(1);
+
+		Common.log("***** Converting GAL into IM");
+		GraphIM gim = convertor.convertTo(gal);
+
+		gim.print_graph();
+
+		Common.log("****** 2.Breath first search");
+		gim.bfs(1);
+
+		gim.reset();
+		Common.log("***** 2.Depth first search");
+		gim.dfs(1);
 	}
 
 	public GraphConvertor(boolean directed){
 		this.directed = directed;
+	}
+
+	/*
+	Convert an Adjacenct list into incident matrix
+	O(V + E)
+	TODO: not correct
+	*/
+	public GraphIM convertTo(GraphAL gal){
+		EdgeNode[] gal_edges = gal.getEdges();
+		if(gal_edges[1] == null) throw new IllegalArgumentException (GRAPH_INIT_ERROR);
+
+		// WARNING: GraphIM does not support directed graphs for now
+		GraphIM gim = new GraphIM(directed);	
+		gim.setNVertices(gal.getNVertices());
+		gim.setProvided_nedges(gal.getProvided_nedges());
+
+		EdgeNode p; int c = 1;
+		for(int i = 1; i <= gal.getNVertices(); i++){
+			p = gal_edges[i];
+			while(p != null){				
+				gim.insert_edge(i, p.y, directed);					
+				p = p.next;
+			}
+		}
+		return gim;
 	}
 
 	/*
@@ -47,7 +88,7 @@ public class GraphConvertor {
 	*/
 	public GraphAL convertTo (GraphAM gm){
 		int[][] m = gm.getMatrix();		
-		if(m == null) throw new IllegalArgumentException ("graph has not been initialized yet.");
+		if(m == null) throw new IllegalArgumentException (GRAPH_INIT_ERROR);
 
 		GraphAL gl = new GraphAL(directed);
 		gl.setNVertices(gm.getNVertices());
@@ -62,6 +103,8 @@ public class GraphConvertor {
 				if(m[i][j] == 2) m[i][j] = 1; // restore the original value
 			}
 		}
+		gl.setProvided_nedges(gl.getNedges());
+		gl.print_graph();
 		return gl;
 	}
 }
