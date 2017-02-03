@@ -8,6 +8,9 @@ import java.util.*;
 
 import ds.Common;
 
+/*
+O(V * V)
+*/
 public class GraphAM  extends Graph {
 
 	protected int[][] m;
