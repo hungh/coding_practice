@@ -59,8 +59,7 @@ public class GraphConvertor {
 
 	/*
 	Convert an Adjacenct list into incident matrix
-	O(V + E)
-	TODO: not correct
+	O(V + E)	
 	*/
 	public GraphIM convertTo(GraphAL gal){
 		EdgeNode[] gal_edges = gal.getEdges();
@@ -74,8 +73,8 @@ public class GraphConvertor {
 		EdgeNode p; int c = 1;
 		for(int i = 1; i <= gal.getNVertices(); i++){
 			p = gal_edges[i];
-			while(p != null){				
-				gim.insert_edge(i, p.y, directed);					
+			while(p != null){		
+				if(p.y > i)	gim.insert_edge(i, p.y, directed); // since if i < p.y, it had been inserted in the previous loop					
 				p = p.next;
 			}
 		}
@@ -107,4 +106,5 @@ public class GraphConvertor {
 		gl.print_graph();
 		return gl;
 	}
+	
 }
