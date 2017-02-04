@@ -40,7 +40,7 @@ public class GraphConvertor {
 		Common.log("****** 1.Depth first search");
 		gal.dfs(1);
 
-		Common.log("***** Converting GAL into IM");
+		Common.log("***** Converting GAL into GIM");
 		GraphIM gim = convertor.convertTo(gal);
 
 		gim.print_graph();
@@ -51,6 +51,18 @@ public class GraphConvertor {
 		gim.reset();
 		Common.log("***** 2.Depth first search");
 		gim.dfs(1);
+
+		Common.log("***** Converting GIM into GAL");
+		GraphAL gal2 = convertor.convertTo(gim);
+
+		gal2.print_graph();
+
+		Common.log("****** 3.Breath first search");
+		gal2.bfs(1);
+
+		gal2.reset();
+		Common.log("***** 3.Depth first search");
+		gal2.dfs(1);
 	}
 
 	public GraphConvertor(boolean directed){
@@ -82,8 +94,35 @@ public class GraphConvertor {
 	}
 
 	/*
+	Convert an incident matrix into adjacent list
+	O(V * E)
+	*/
+	public GraphAL convertTo(GraphIM gm){
+		int[][] m = gm.getMatrix();
+		if(m == null) throw new IllegalArgumentException (GRAPH_INIT_ERROR);
+
+		GraphAL gl = new GraphAL(directed);
+		gl.setNVertices(gm.getNVertices());
+		int i, j;
+
+		int x, y; // 2 vertices of an edge
+		for(i = 1; i <= gm.getNedges(); i++){
+			x = -1; y = -1;
+			for(j = 1; j <= gm.getNVertices(); j++){
+				if(m[j][i] == 1) {
+					if(x < 0) x = j;
+					else if(y < 0) y = j;
+				}
+			}
+			if(x > 0 && y > 0) gl.insert_edge(x, y, directed);
+		}
+		gl.setProvided_nedges(gl.getNedges());
+		return gl;
+	}
+
+	/*
 	Convert an adjacency matrix to adjacency lists 
-	O(n^2) + O(m + n) = O(n^2)
+	O(V^2) + O(V + E) = O(V^2)
 	*/
 	public GraphAL convertTo (GraphAM gm){
 		int[][] m = gm.getMatrix();		
