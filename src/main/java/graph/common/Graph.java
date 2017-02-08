@@ -83,6 +83,10 @@ public abstract class Graph {
 			y = sc.nextInt();
 			insert_edge(x, y, directed);
 		}
+		closeInputFile(sc);
+	}
+
+	protected void closeInputFile(Scanner sc){
 		sc.close();
 	}
 
