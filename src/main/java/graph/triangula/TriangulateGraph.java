@@ -4,6 +4,8 @@ Graph Triangulation
 
 package graph.triangula;
 
+import java.util.*;
+
 import graph.common.Triangle;
 import graph.common.Graph;
 import graph.common.GraphAL;
@@ -11,7 +13,11 @@ import graph.common.GraphAL;
 public class TriangulateGraph extends GraphAL {
 	public static final int MAXV = Graph.MAXV;
 
-	protected int[] triangles = new int[MAXV];
+	protected Triangle[] triangles = new Triangle[MAXV];
+
+	public TriangulateGraph(boolean _directed){
+		super(_directed);
+	}
 
 	public void read_graph (){
 		Scanner sc = new Scanner(System.in);
