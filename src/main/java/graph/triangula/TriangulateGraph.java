@@ -24,9 +24,15 @@ public class TriangulateGraph extends GraphAL {
 	public static void main(String[] args){
 		TriangulateGraph g = new TriangulateGraph(false);
 		g.read_graph("/triangleGraph.txt"); // See Figure 5.8 (Skiena book)
+
+		Common.log("\n *** Adjacency triangles list:");
 		g.printAdjTriangle();
-		Common.log(" **** The dual graph (dashed lines) of a triangulation : (Figure 5.8)");
+
+		Common.log("\n *** The first graph :");
 		g.print_graph();
+
+		Common.log("\n **** The triangulation graph (red dashed line): (Figure 5.8)");
+		g.print_graph2();
 	}
 
 	public TriangulateGraph(boolean _directed){
@@ -97,7 +103,7 @@ public class TriangulateGraph extends GraphAL {
 		sc.close();		
 	}
 
-	// returns the number of adj element (Max : 3), t is the new vertex number
+	// returns the number of adj elements (Max : 3), t is the new vertex number
 	public int insertNewAdj(int t, int adjValue){
 		EdgeNode temp = t2Edges[t];
 		int size = 0;
@@ -142,8 +148,7 @@ public class TriangulateGraph extends GraphAL {
 		// don't close the file yet, close it manually
 	}
 
-	@Override
-	public void print_graph(){
+	public void print_graph2(){
 		EdgeNode p;
 		for(int i = 1; i <= numOfTriangles; i++){
 			Common._log(i + " :");
