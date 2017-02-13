@@ -8,6 +8,8 @@
  */
 
 import groovy.io.FileType
+import org.apache.tools.ant.taskdefs.condition.Os
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'application'
@@ -42,6 +44,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+def getToken()  {
+    if(Os.isFamily (Os.FAMILY_WINDOWS)) return  "\\"
+    return "/"
+}
+
 def getFullPkg (String _className){
     def dirPrefix = 'build/classes/main'
     def className = _className + ".class";
@@ -59,13 +66,14 @@ def getFullPkg (String _className){
         println "WARN: unable to find a match for ($_className). Using the original name"
         return _className
     }
-    return retPath.replace("/", ".").substring(0, retPath.length() - 6);
+    return retPath.replace(getToken(), ".").substring(0, retPath.length() - 6);
 }
 
 def myMainClass = System.getProperty('main')
 
 if(myMainClass) {
     myMainClass = getFullPkg(myMainClass)
+    println "myMainClass=" + myMainClass
 }else{
     myMainClass = "Library"
 }
