@@ -14,13 +14,13 @@ import ds.Common;
 import graph.common.EdgeNode;
 import graph.common.GraphAL;
 
-public class GraphSquareAL extends GraphAL {
+public class GraphSquareAL extends GraphAL implements GraphSquare {
 
 	protected EdgeNode[] edges_origin = new EdgeNode[GraphAL.MAXV + 1];
 
 	public static void main(String[] args){
 		GraphSquareAL g = new GraphSquareAL(true);
-		g.read_graph("/graphsquare.txt");
+		g.read_graph("/graphsquare2.txt");
 		Common.log(" ******* G");
 		g.print_graph();
 
@@ -35,6 +35,7 @@ public class GraphSquareAL extends GraphAL {
 	}
 
 	/* Complexity O(V * E^2). Can we improve this ? */
+	@Override
 	public void square(){
 		backupOrigin();
 
@@ -56,6 +57,7 @@ public class GraphSquareAL extends GraphAL {
 		mergeGraph();
 	}
 
+	@Override
 	public void backupOrigin(){
 		for(int i = 1; i <= nvertices; i++) {
 			edges_origin[i] = edges[i];
@@ -63,13 +65,20 @@ public class GraphSquareAL extends GraphAL {
 		}
 	}
 
+	@Override
 	public void mergeGraph(){
 		Map<Integer, Object> m = new HashMap<Integer, Object>();
-		EdgeNode t, newT;
+		EdgeNode t, newT, prev;
 		for(int i = 1; i <= nvertices; i++){
-			t = edges[i];       // new graph
+			t = prev = edges[i];       // new graph
 			while(t != null) {
-				m.put(t.y, null);
+				// remove dups
+				if(m.containsKey(t.y)){
+					prev.next = t.next;
+				}else{
+					m.put(t.y, null);
+					prev = t;						
+				}		
 				t = t.next;
 			}
 			t = edges_origin[i]; // the old graph

@@ -142,7 +142,7 @@ public class GraphConvertor {
 			}
 		}
 		gl.setProvided_nedges(gl.getNedges());
-		gl.print_graph();
+		// gl.print_graph();
 		return gl;
 	}
 	
