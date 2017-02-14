@@ -24,6 +24,8 @@ public class GraphSquareAL extends GraphAL implements GraphSquare {
 		Common.log(" ******* G");
 		g.print_graph();
 
+		g.dfs(1);
+
 		g.square();
 
 		Common.log("\n ******* G^2");
