@@ -22,11 +22,9 @@ import graph.common.GraphAL;
 import graph.common.EdgeNode;
 
 public class GraphVertexCover extends GraphAL {
-	protected Map<Integer, Object> coverMap = new HashMap<Integer, Object>();
 
 	public GraphVertexCover(boolean directed){
 		super(directed);
-		coverMap.put(1, null);
 	}
 
 	public static void main(String[] args){
@@ -36,14 +34,6 @@ public class GraphVertexCover extends GraphAL {
 		List<Integer> cover_s = g.getMinCover(1);
 		Common.log("");
 		for(Integer e: cover_s) Common._log(" " + e);
-	}
-
-	// using dfs : not a correct solution
-	@Override
-	public void process_edge(int x, int y){
-		if(! coverMap.containsKey(x) && !coverMap.containsKey(y) ) {
-			coverMap.put(y, null);	
-		}
 	}
 
 	public List<Integer> getMinCover(int start){
@@ -76,7 +66,6 @@ public class GraphVertexCover extends GraphAL {
 					rs.add(vo.y);
 					shouldAddParent = false; // child covers parent
 				}
-
 				// remove all v's neighboring edges
 				edges_copy.remove(vo.y);
 				vo = vo.next;
@@ -86,14 +75,6 @@ public class GraphVertexCover extends GraphAL {
 			if(shouldAddParent) rs.add(u);
 			u++;
 		}
-
 		return rs;
-
-	}
-
-	public void printCoverVertices () {
-		Common.log("** Cover vertices:");
-		for(Integer e : coverMap.keySet()) Common._log(" " + e);
-		Common.log("");
 	}
 }
