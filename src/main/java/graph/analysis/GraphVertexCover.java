@@ -19,6 +19,7 @@ import java.util.*;
 
 import ds.Common;
 import graph.common.GraphAL;
+import graph.common.EdgeNode;
 
 public class GraphVertexCover extends GraphAL {
 	protected Map<Integer, Object> coverMap = new HashMap<Integer, Object>();
@@ -29,19 +30,65 @@ public class GraphVertexCover extends GraphAL {
 	}
 
 	public static void main(String[] args){
-		GraphVertexCover g = new GraphVertexCover(true);
-		g.read_graph("/graphsquare2.txt");
+		GraphVertexCover g = new GraphVertexCover(true); // assume that we are using direct graph for parent ->child direction only
+		g.read_graph("/graphtree.txt"); //graphtree_sim.txt  (for simple case)
 		g.print_graph();
-		g.dfs(1);
-		g.printCoverVertices();
+		List<Integer> cover_s = g.getMinCover(1);
+		Common.log("");
+		for(Integer e: cover_s) Common._log(" " + e);
 	}
 
-
+	// using dfs : not a correct solution
 	@Override
 	public void process_edge(int x, int y){
 		if(! coverMap.containsKey(x) && !coverMap.containsKey(y) ) {
-			coverMap.put(y, null);
+			coverMap.put(y, null);	
 		}
+	}
+
+	public List<Integer> getMinCover(int start){
+		List<Integer> rs = new ArrayList<Integer>();
+		// make a copy of the original edges
+		int i;
+		Map<Integer, EdgeNode> edges_copy = new HashMap<Integer, EdgeNode>();
+		EdgeNode tmp, h;
+		for(i = 1; i <= nvertices; i++){
+			tmp = edges[i];
+			
+			while(tmp != null){
+				h = new EdgeNode(tmp.y);				
+				h.next = edges_copy.get(i);
+				edges_copy.put(i, h);
+				tmp = tmp.next;
+			}
+		}	
+		int u = start;
+		EdgeNode vo;
+		boolean shouldAddParent;
+		while(!edges_copy.isEmpty()) {
+
+			vo = edges_copy.get(u);
+			shouldAddParent = (vo != null);
+
+			while(vo != null) {				
+				// dont add if it is a leaf, assume that a leaf does not connect back to its parent
+				if(edges_copy.get(vo.y) != null) {
+					rs.add(vo.y);
+					shouldAddParent = false; // child covers parent
+				}
+
+				// remove all v's neighboring edges
+				edges_copy.remove(vo.y);
+				vo = vo.next;
+			}				
+			// removing all u's neighboring edges
+			edges_copy.remove(u);
+			if(shouldAddParent) rs.add(u);
+			u++;
+		}
+
+		return rs;
+
 	}
 
 	public void printCoverVertices () {
