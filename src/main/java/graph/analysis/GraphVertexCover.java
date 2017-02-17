@@ -23,17 +23,21 @@ import graph.common.EdgeNode;
 
 public class GraphVertexCover extends GraphAL {
 
+	protected int[] vweights;
+
 	public GraphVertexCover(boolean directed){
 		super(directed);
+		vweights = new int [GraphAL.MAXV + 1];
 	}
 
 	public static void main(String[] args){
 		GraphVertexCover g = new GraphVertexCover(true); // assume that we are using direct graph for parent ->child direction only
 		g.read_graph("/graphtree.txt"); //graphtree_sim.txt  (for simple case)
 		g.print_graph();
-		List<Integer> cover_s = g.getMinCover(1);
+		List<Integer> cover_s =  g.getMinCoverByWeight(1); //g.getMinCover(1);
 		Common.log("");
-		for(Integer e: cover_s) Common._log(" " + e);
+		if(cover_s != null)
+			for(Integer e: cover_s) Common._log(" " + e);
 	}
 
 	public List<Integer> getMinCover(int start){
@@ -76,5 +80,17 @@ public class GraphVertexCover extends GraphAL {
 			u++;
 		}
 		return rs;
+	}
+
+	public List<Integer> getMinCoverByWeight(int start){
+		return null;
+	}
+
+	@Override
+	public void readExtraData(Scanner sc) {
+		int i = 0;
+		while(sc.hasNext()) {
+			vweights[++i] = sc.nextInt();
+		}
 	}
 }

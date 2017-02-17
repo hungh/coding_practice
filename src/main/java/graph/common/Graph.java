@@ -83,12 +83,15 @@ public abstract class Graph {
 			y = sc.nextInt();
 			insert_edge(x, y, directed);
 		}
+		readExtraData(sc);
 		closeInputFile(sc);
 	}
 
 	protected void closeInputFile(Scanner sc){
 		sc.close();
 	}
+
+	protected void readExtraData(Scanner sc){}
 
 	public void reset(){
 		for(int i = 1; i <= nvertices; i++){
