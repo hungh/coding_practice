@@ -34,7 +34,8 @@ public class GraphVertexCover extends GraphAL {
 		GraphVertexCover g = new GraphVertexCover(true); // assume that we are using direct graph for parent ->child direction only
 		g.read_graph("/graphtree.txt"); //graphtree_sim.txt  (for simple case)
 		g.print_graph();
-		List<Integer> cover_s =  g.getMinCoverByWeight(1); //g.getMinCover(1);
+		List<Integer> cover_s = new ArrayList<Integer>();
+		g.getMinCoverByWeight(1, cover_s); //g.getMinCover(1);
 		Common.log("");
 		if(cover_s != null)
 			for(Integer e: cover_s) Common._log(" " + e);
@@ -82,8 +83,39 @@ public class GraphVertexCover extends GraphAL {
 		return rs;
 	}
 
-	public List<Integer> getMinCoverByWeight(int start){
-		return null;
+	public int getMinCoverByWeight(int node, List<Integer> rs){
+		LinkedList<Integer> queue_leaf = new LinkedList<Integer>();
+		EdgeNode adj = edges [node];
+		int nonleaf;
+		int lweight = 0;
+		while (adj != null) {
+			if( edges[adj.y] == null ) { //leaf
+				Common.log("adding leaf:" + adj.y);
+				queue_leaf.add (adj.y);
+				Common.log("\t Queue_after_adding_leaf:" + queue_leaf);
+			}else {
+				Common.log("exploring cnode:" + adj.y);
+				nonleaf = getMinCoverByWeight(adj.y, rs);	
+				if(nonleaf > 0) {
+					vweights [adj.y] = nonleaf;
+					queue_leaf.add (adj.y);
+				}
+			}
+			lweight += vweights[adj.y];
+			adj = adj.next;			
+		}
+		Common.log("Queue:" + queue_leaf);
+		if(queue_leaf.size() < vweights[node]) {
+			// select all leaves
+			for(int leaf : queue_leaf) {
+				rs.add(leaf);			
+				// TODO: remove leaf's children from 'rs'
+			}
+			return queue_leaf.size();
+		}else {
+			rs.add(node);
+			return -1;
+		}
 	}
 
 	@Override
