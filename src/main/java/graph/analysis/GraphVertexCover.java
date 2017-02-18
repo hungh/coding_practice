@@ -83,38 +83,27 @@ public class GraphVertexCover extends GraphAL {
 		return rs;
 	}
 
-	public int getMinCoverByWeight(int node, List<Integer> rs){
-		LinkedList<Integer> queue_leaf = new LinkedList<Integer>();
+	public boolean getMinCoverByWeight(int node, List<Integer> rs){
+		// queue to weigh to compare against parent
+		LinkedList<Integer> weighing_queue = new LinkedList<Integer>();
 		EdgeNode adj = edges [node];
-		int nonleaf;
-		int lweight = 0;
+		boolean isSelected;
+		int children_weights = 0;
 		while (adj != null) {
-			if( edges[adj.y] == null ) { //leaf
-				Common.log("adding leaf:" + adj.y);
-				queue_leaf.add (adj.y);
-				Common.log("\t Queue_after_adding_leaf:" + queue_leaf);
-			}else {
-				Common.log("exploring cnode:" + adj.y);
-				nonleaf = getMinCoverByWeight(adj.y, rs);	
-				if(nonleaf > 0) {
-					vweights [adj.y] = nonleaf;
-					queue_leaf.add (adj.y);
-				}
-			}
-			lweight += vweights[adj.y];
+			if( edges[adj.y] == null )  //leaf
+				weighing_queue.add (adj.y);
+			else 
+				if(!getMinCoverByWeight(adj.y, rs)) weighing_queue.add (adj.y); // if the node is not selected, add it into weighing
 			adj = adj.next;			
 		}
-		Common.log("Queue:" + queue_leaf);
-		if(queue_leaf.size() < vweights[node]) {
+		for(int w: weighing_queue) children_weights += vweights[w];
+		if(children_weights < vweights[node]) {
 			// select all leaves
-			for(int leaf : queue_leaf) {
-				rs.add(leaf);			
-				// TODO: remove leaf's children from 'rs'
-			}
-			return queue_leaf.size();
+			for(int leaf : weighing_queue) rs.add(leaf);			
+			return false;  // the node was not selected
 		}else {
 			rs.add(node);
-			return -1;
+			return true; // was selected
 		}
 	}
 
