@@ -50,7 +50,7 @@ public class ColorGraph extends GraphAL {
 		return bipartite;
 	}
 
-	private static int complement(int colorx){
+	protected static int complement(int colorx){
 		if(colorx == Color.WHITE.toInt()) return Color.BLACK.toInt();
 		if(colorx == Color.BLACK.toInt()) return Color.WHITE.toInt();
 		return Color.UNCOLORED.toInt();

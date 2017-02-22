@@ -186,4 +186,19 @@ public class GraphAL extends Graph {
 		if(processed [y] && (entry_time[y] < entry_time[x])) return CROSS;
 		return UNKNOWN_EDGE;
 	}
+
+	protected void populateVertexDegrees (){
+		EdgeNode p;
+		int tnode;
+		for(int i = 1; i <= nvertices; i++){
+			tnode = 0;
+			p = edges[i];
+			while(p != null){
+				degree[p.y]++;
+				tnode++;
+				p = p.next;
+			}
+			degree[i] += tnode;
+		}	
+	}
 }

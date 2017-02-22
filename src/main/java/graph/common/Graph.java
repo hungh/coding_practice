@@ -93,6 +93,7 @@ public abstract class Graph {
 
 	protected void readExtraData(Scanner sc){}
 
+
 	public void reset(){
 		for(int i = 1; i <= nvertices; i++){
 			processed[i] = false;
