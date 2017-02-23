@@ -11,13 +11,14 @@ package graph.analysis;
 
 import java.util.*;
 import ds.Common;
+import graph.apps.GraphCyc;
 import graph.common.*;
 
-public class FindCycleGraph extends GraphAL {
+public class FindCycleGraph extends GraphCyc {
 
 	public static void main(String[] args){
 		FindCycleGraph g = new FindCycleGraph(false);
-		g.read_graph("/find_cycle_graph.txt");
+		g.read_graph("/find_cycle_graph.txt");  // or find_cycle_graph2.txt
 		g.print_graph();
 		g.findTriangleV3();
 
@@ -28,7 +29,6 @@ public class FindCycleGraph extends GraphAL {
 	public FindCycleGraph(boolean directed) {
 		super(directed);
 	}
-
 
 	// O(|V| ^ 3)
 	public void findTriangleV3(){
@@ -60,50 +60,65 @@ public class FindCycleGraph extends GraphAL {
 			cache.clear();
 		}
 	}
-	// O(V * E)
+	// being asked O(V * E)
+	// solution: O(V^2)
 	public void findTriangleVE(){
 		GraphConvertor convertor = new GraphConvertor(directed);
 		GraphAM gim = convertor.convertGalToAm(this);
-		// gim.print_graph();
 		int[][] m = gim.getMatrix();
 		int i, j;
+		Map<Integer, List<Integer>> rmap = new HashMap<Integer, List<Integer>> ();
+		Map<Integer, List<Integer>> cmap = new HashMap<Integer, List<Integer>> ();
 		// fold the square matrix at the diagonal
 		// and remove cells that are not symmetric to the other ones across the diagonal
 		for(i = 1; i <= nvertices; i++) {
-			for(j = i + 1; j < nvertices; j++) {
+			for(j = i + 1; j <= nvertices; j++) {
 				if(m[i][j] != m[j][i]) { // ignore the diagonal
 					m[i][j] = 0;
 					m[j][i] = 0;
-				}
-			}
-		}
-		
-		// look for triangles 
-		int tnodes;
-		int one, two, three;
-		for(i = 1; i <= nvertices; i++) {
-			one = 0; two = 0; three = 0;
-			tnodes = 0; 
-			for(j = i + 1; j < nvertices; j++) {
-				
-				if(m[i][j] == 1) {
-					if(one == 0) one = i; else three = i;
-					tnodes++;
-					// scan down
-					for(int k = i; k <= j - 1; k++) {
-						if(m [k][j] == 1) {
-							tnodes++;
-							two = k;	
-							break;						
-						}
-					}
-				}
-				Common.log("_tnodes=" + tnodes);
-				if(tnodes == 3){
-					Common.log("found one = " + one  + ";two=" + two + ";three=" + three);
+				}else if(m[i][j] == 1) {
+					put(rmap, i, j);
+					put(cmap, j, i);
 				}
 			}
 		}
 
+		debug(m);
+
+		// look for triangles - a '1' cell where its row and col of which has only one '1'
+		int ridx;
+		List<Integer> rows;
+		List<Integer> cols;
+		for(Map.Entry<Integer, List<Integer>> e : rmap.entrySet()) {
+			ridx = e.getKey();
+			rows = e.getValue();
+			if(rows != null && rows.size() == 2) {
+				for(Integer cidx: rows){					
+					cols = cmap.get(cidx);
+					cols.remove(Integer.valueOf(ridx));
+					if(cols.size() == 1) Common.log("* Triangle:" + rows + ", " + ridx);
+				}
+			}
+		}
+
+	}
+
+	private void put(Map<Integer, List<Integer>> rmap, int i, int j){
+		List<Integer> l = rmap.get(i);
+		if(l == null) {
+			l = new LinkedList<Integer>();
+			rmap.put(i, l);
+		}
+		rmap.get(i).add(j);
+
+	}
+
+	private void debug(int[][] m) {
+		for(int i = 1; i <= nvertices; i++){
+			for(int j = 1; j <= nvertices; j++){
+				Common._log(" " + m[i][j]);
+			}
+			Common.log("");
+		}
 	}
 }
