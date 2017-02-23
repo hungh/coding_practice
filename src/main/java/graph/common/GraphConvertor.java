@@ -145,5 +145,23 @@ public class GraphConvertor {
 		// gl.print_graph();
 		return gl;
 	}
+
+	public GraphAM convertGalToAm(GraphAL gal){
+		EdgeNode[] gal_edges = gal.getEdges();
+
+		GraphAM gam = new GraphAM(directed);	
+		gam.setNVertices(gal.getNVertices());
+		gam.setProvided_nedges(gal.getProvided_nedges());
+
+		EdgeNode p; int c = 1;
+		for(int i = 1; i <= gal.getNVertices(); i++){
+			p = gal_edges[i];
+			while(p != null){		
+				gam.insert_edge(i, p.y, directed); // since if i < p.y, it had been inserted in the previous loop					
+				p = p.next;
+			}
+		}
+		return gam;
+	}
 	
 }
