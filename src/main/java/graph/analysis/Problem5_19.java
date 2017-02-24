@@ -15,10 +15,23 @@ import ds.Common;
 import graph.common.*;
 
 public class Problem5_19 extends GraphAL {
-	public static void main(String[] args){}
+	public static void main(String[] args){
+		Problem5_19 g = new Problem5_19(true);
+		g.read_graph("/problem5_19.txt");
+
+		// O(V + E)
+		g.dfs(1, 0);
+		Common.log("diameter of the tree:" + g.getDiameter());
+	}
 
 	public Problem5_19 (boolean directed) {
 		super(directed);
 	}
 
+	public int getDiameter() {
+		int max = -1;
+		for(int d: depths) 
+			if(d > max) max = d;
+		return max;
+	}
 }

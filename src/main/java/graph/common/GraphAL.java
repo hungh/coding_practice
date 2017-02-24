@@ -13,6 +13,8 @@ Converted into Java from C code in Skiena Algorithm Design Manual (Chapter 5)
 public class GraphAL extends Graph {
 	public static final int MAXV = Graph.MAXV;
 
+	protected Set<Integer> depths = new HashSet<Integer>();
+
 	public EdgeNode[] edges = new EdgeNode[MAXV + 1]; 
 	
 	public void hard_reset(){
@@ -20,6 +22,7 @@ public class GraphAL extends Graph {
 			edges[i] = null;
 			degree[i] = 0;
 		}
+		depths.clear();
 		reset();
 	}
 
@@ -108,6 +111,10 @@ public class GraphAL extends Graph {
 
 	@Override
 	public void dfs(int v){
+		dfs(v, -1);
+	}
+
+	public void dfs(int v, int depth){
 		EdgeNode p;
 		int y;
 
@@ -118,12 +125,13 @@ public class GraphAL extends Graph {
 		process_vertex_early(v);
 
 		p = edges[v];
+		if(depth >= 0  &&  (p == null)) depths.add(depth); // Optional: for special graph (tree)
 		while(p != null){
 			y = p.y;
 			if(!discovered[y]){
 				parent[y] = v;
 				process_edge(v, y);
-				dfs(y);
+				if(depth >= 0 ) dfs(y, depth + 1); /* optional */ else dfs(y, depth);
 			} else if(!processed[y] || directed){
 				process_edge(v, y);
 			}
