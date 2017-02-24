@@ -202,7 +202,7 @@ public class GraphAL extends Graph {
 			tnode = 0;
 			p = edges[i];
 			while(p != null){
-				degree[p.y]++;
+				if(directed) degree[p.y]++;
 				tnode++;
 				p = p.next;
 			}
