@@ -52,9 +52,7 @@ public class TopoSorting extends GraphAL {
 
 	protected void print_stack() {
 		if(sorted == null) return;
-		while(!sorted.isEmpty()){
-			Common._log(" " + sorted.pop());
-		}
+		for(int e : sorted) Common._log(" " + e);
 		Common.log("");
 	}
 }
