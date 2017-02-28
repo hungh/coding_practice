@@ -12,18 +12,16 @@ import ds.Common;
 import graph.common.*;
 
 public class RemoveV2Graph  extends GraphAL {
+	protected Map<Integer, Object> unProcessedMap = new HashMap<Integer, Object>();
 
 	public static void main(String[] args) {
 		RemoveV2Graph g = new RemoveV2Graph(false);
-		g.read_graph("/shortest_path2.txt"); //remove_v2_graph
+		g.read_graph("/remove_v2_graph.txt"); //   remove_v2_graph shortest_path2
 		g.init();
-
-		Common.log("Before removing...");		
 		g.print_graph();
+		g.remove_vdegree2(1);
 
-		g.bfs(1);
-
-		Common.log("After removing...");
+		Common.log("After removing...\n");
 		g.print_graph();
 	}
 
@@ -33,46 +31,72 @@ public class RemoveV2Graph  extends GraphAL {
 
 	public RemoveV2Graph (boolean directed) {
 		super(directed);		
-	}
+	} 
 
-	@Override
-	public void process_edge(int x, int y) {
-		EdgeNode p; int s = -1;
-		if(degree[x] == 2) {
-			p = edges [x];
-			while(p != null) {
-				Common._log("..");
-				if(p.y != y)
-					s = p.y;
-				p = p.next;				
-			}
-			if(s > 0){
-				edges [x] = null;
-				remove_edge(s, x);
-				remove_edge (y, x);
+	public void remove_vdegree2(int start) {
+		LinkedList<Integer> q = new LinkedList<Integer>();
+		EdgeNode p; int[] ns = new int[2];
+		int k, i;
+		for(i = 1; i <= nvertices; i++){		
+			q.push(i);	
+		}
 
-				insert_edge(s, y, directed);
+		while(! q.isEmpty()){			
+			i = q.pop();
+			k = 0;
+			Common._log(".");
+			if(degree[i] == 2){
+				p = edges [i];
+				while(p != null) {
+					ns[k++] = p.y;
+					p = p.next;				
+				}
+				remove_edge(ns[0], i, directed);
+				remove_edge (i, ns[1], directed);
 
-				processed[s] = false;	
-			} else {
-				throw new IllegalArgumentException("Invalid Graph for x=" + x);
+				if( !insert_edge_b(ns[0], ns[1]) ) {
+					degree[ns[0]]--;
+					degree[ns[1]]--;
+					q.push(ns[0]); // this will create dups in the queue, but it is okay for now
+					q.push(ns[1]);
+				}
+				edges [i] = null;
+				Common.log("\t\tremoving " +i);
+				degree[i] = 0;
 			}
 		}
+	}	
+
+	// returns false if the edge (x,y) already exists
+	protected boolean insert_edge_b(int x, int y){
+		EdgeNode p = edges[x];
+		while(p != null) {
+			if(p.y == y) return false;
+			p = p.next;			
+		}
+		Common.log("\t\t -- adding a new edge " + x +  " " + y);
+		insert_edge(x, y, directed);
+		return true;
 	}
 
-	protected void remove_edge(int x, int y){
+	protected void remove_edge(int x, int y, boolean directed){
 		EdgeNode prev, curr;
 		curr = edges[x];
 		prev = curr;
+		int i = 0;
 		while(curr != null) {
-			if(curr.y == y)
+			if(curr.y == y){
+				if(i == 0) {
+				 	edges[x] = curr.next; 				 	
+					break;
+				} // delete head
 				prev.next = curr.next;
+			}
 			prev = curr;
 			curr = curr.next;
-			Common._log(".");
+			i++;
 		}
-		Common.log("removing edge " + x +  ";" + y);
+		Common.log("\t removing " + x + " " +  y);
+		if(!directed) remove_edge(y, x, true);
 	}
-
-
 }
