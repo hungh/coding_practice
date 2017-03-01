@@ -21,13 +21,16 @@ import ds.Common;
 import graph.common.*;
 
 public class Problem5_23 extends GraphAL {
+	protected Map<Integer, Set<Integer>> rowMap = new HashMap<Integer, Set<Integer>>();
 
 	public static void main(String[] args){
 		Problem5_23 g= new Problem5_23(true);
-		g.read_graph("/problem5_23_2.txt"); //problem5_23.txt
+		g.read_graph("/problem5_23.txt"); //problem5_23.txt
 		g.print_graph();
-		int max = g.findMinRows(3, 0) + 1;
+		int max = g.findMinRows(1, 0) + 1;
 		Common.log("Max rows=" + max);
+		g.printRowMap();
+		// TODO: ovbservation - if any row that has less then 2 vertices then the graph is not possible
 	}
 
 	public Problem5_23 (boolean directed) {
@@ -47,6 +50,7 @@ public class Problem5_23 extends GraphAL {
 		int begin;
 		while(! queue.isEmpty()) {
 			begin = queue.pop();
+			updateRowMap(row, begin);
 			p  = edges[begin];
 			while(p != null) {
 				if(! discovered[p.y]){
@@ -54,6 +58,7 @@ public class Problem5_23 extends GraphAL {
 						Common.log("\t\t Adding to group [" + row + "] vertex " + p.y);
 						queue.push (p.y);
 						discovered[p.y] = true;
+						updateRowMap(row, p.y);
 					}else {
 						r = findMinRows(p.y, row + 1);
 					}	
@@ -64,4 +69,20 @@ public class Problem5_23 extends GraphAL {
 		}
 		return Math.max(row, r);
 	}
-}
+
+	public void printRowMap() {
+		for(Map.Entry<Integer, Set<Integer>> kv: rowMap.entrySet()) {
+			Common._log("row " + kv.getKey() + " ~ no.vertex " + kv.getValue());
+			Common.log("");
+		}
+	}
+
+	protected void updateRowMap(int row, int i) {
+		Set<Integer> v = rowMap.get(row);
+		if(v == null) {
+			v = new HashSet<Integer>();
+		}
+		v.add(i);
+		rowMap.put(row, v);
+	}
+ }
