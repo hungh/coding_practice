@@ -24,7 +24,7 @@ public class TopoSorting5D2 extends TopoSorting {
 
 	public static void main(String[] args){
 		TopoSorting5D2 graph = new TopoSorting5D2(true);
-		graph.test("/graph5D12.txt");
+		graph.getLeftMostVertex("/graph5D12.txt");
 		graph.print_stack();
 	}
 

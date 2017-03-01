@@ -9,16 +9,18 @@ import java.util.*;
 
 public class TopoSorting extends GraphAL {
 
+	protected boolean isCirular;
 	protected LinkedList<Integer> sorted;
 
 	public static void main(String[] args){
-		new TopoSorting(true).test("/grapha.txt");
+		new TopoSorting(true).getLeftMostVertex("/grapha.txt");
 	}
 
-	public void test(String fileName){
+	public int getLeftMostVertex(String fileName){
 		read_graph(fileName);
 		reset();
 		topsort();
+		return sorted.peek();
 	}
 
 	public TopoSorting(boolean directed){
@@ -36,6 +38,7 @@ public class TopoSorting extends GraphAL {
 		edge_type = edge_classification(x, y);
 
 		if(edge_type == BACK){
+			isCirular = true;
 			Common.log("Warning: directed cycle found, not a DAG (" + x + "," + y + ")");
 		}
 
@@ -49,6 +52,8 @@ public class TopoSorting extends GraphAL {
 
 		print_stack();
 	}
+
+	public boolean isCirular() { return this.isCirular; }
 
 	protected void print_stack() {
 		if(sorted == null) return;
