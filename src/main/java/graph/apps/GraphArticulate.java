@@ -48,14 +48,14 @@ public class GraphArticulate extends GraphAL {
 		boolean root; // is vertex root of the dfs tree
 		int time_v; //earliest reachable time for v
 		int time_parent; // earliest reachable time for parent's v
+		boolean isArticulate = false;
+		boolean isParentArt = false;
 
 		// root does not have parent
 		if(parent[v] < 1) {
 			if(tree_out_degree[v] > 1) {// if it has more than 1 branch, then it is an articulation vertex
 				Common.log("Root is an articulation vertex " + v);
-				record_articulate(v, true);
-			}else {
-				record_articulate(v, false);
+				isArticulate = true;
 			}
 			return; // nothing to do
 		}
@@ -64,19 +64,21 @@ public class GraphArticulate extends GraphAL {
 		// v's parent is also its reachable ancester but this parent is not a root
 		if(reachable_ancestor[v] == parent[v] && !root){
 			Common.log("v's parent is an articulate vertex v=" + v + ";parent=" + parent[v]);
-			record_articulate(parent[v], true);
+			isParentArt = true;
 			
 		}
 		// just discovered v (after the second call of process_vertex_early, v's parent and now v) [v is not processed yet]
 		if(reachable_ancestor[v] == v){
 			// v's parent must be an articulation vertex
 			Common.log("Bridge articulation vertex " +  parent[v]);
+			isParentArt = true;
 			// if v is not a leaf then it is an articulate vertex
-			if(tree_out_degree[v] > 0) // a leaf must not have any branch-out
+			if(tree_out_degree[v] > 0) {// a leaf must not have any branch-out
 				Common.log("v is an bridge articulate vertex " + v);
-
-			record_articulate(v, true);
+				isArticulate = true;
+			}
 		}
+
 		time_v = entry_time [reachable_ancestor[v]];
 		time_parent  = entry_time [reachable_ancestor[parent[v]]];
 
@@ -86,7 +88,8 @@ public class GraphArticulate extends GraphAL {
 		if(time_v < time_parent){
 			reachable_ancestor[parent[v]] = reachable_ancestor[v];
 		}
-
+		if(isArticulate) record_articulate(v, isArticulate);
+		if(isParentArt) record_articulate(parent[v], isArticulate);
 	}
 
 	public void record_articulate(int v, boolean isArticulate){}
