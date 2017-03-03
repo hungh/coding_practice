@@ -14,6 +14,7 @@ public abstract class Graph {
 	public int provided_nedges;
 	public int nedges;
 	public boolean directed;
+	public boolean weighted;
 
 	// edge types
 	protected int TREE = 0;
@@ -67,6 +68,9 @@ public abstract class Graph {
 	public abstract void process_vertex_early(int v);
 	public abstract void process_edge(int x, int y);
 	public abstract void hard_reset();
+	public void insert_edge(int x, int y, Integer z, boolean _directed){
+		throw new UnsupportedOperationException("insert_edge is not supported or implemented");
+	}
 
 	protected void scanInput(Scanner sc, boolean showLogs){
 		int m, // number of edges;
@@ -81,7 +85,10 @@ public abstract class Graph {
 			if(showLogs)  Common.log("Enter an edge by 2 numbers:");
 			x = sc.nextInt();
 			y = sc.nextInt();
-			insert_edge(x, y, directed);
+			if(weighted) 
+				insert_edge(x, y, sc.nextInt(), directed);
+			else 
+				insert_edge(x, y, directed);
 		}
 		readExtraData(sc);
 		closeInputFile(sc);

@@ -48,18 +48,24 @@ public class GraphAL extends Graph {
 	}
 
 	@Override
-	public void insert_edge(int x, int y, boolean _directed){
+	public void insert_edge(int x, int y, Integer z, boolean _directed){ // z: weight of the edge
 		EdgeNode p = new EdgeNode();
 		p.y = y;
+		p.weight = z;
 		p.next = edges[x]; // insert at the head of adjacency list
 		edges[x] = p;
 
 		if(!_directed) { // need another direction for undirected graph
-			insert_edge(y, x, true);
+			insert_edge(y, x, z, true);
 		}else{
 			// count the number edge
 			nedges++;
 		}
+	}
+
+	@Override
+	public void insert_edge(int x, int y, boolean _directed){
+		this.insert_edge(x, y, null, _directed);
 	}
 
 	public void remove_edge(int x, int y, boolean directed){
