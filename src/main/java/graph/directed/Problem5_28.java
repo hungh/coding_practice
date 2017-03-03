@@ -15,7 +15,7 @@ public class Problem5_28 extends GraphArticulate {
 	private Map<Integer, Boolean> artMap = new HashMap<Integer, Boolean>();
 
 	public static void main(String[] args){
-		Problem5_28 g = new Problem5_28(true);
+		Problem5_28 g = new Problem5_28(false);
 		g.read_graph("/problem_5_28.txt");
 		g.print_graph();
 		g.dfs(1); // assume that 1 is the root node
@@ -32,7 +32,7 @@ public class Problem5_28 extends GraphArticulate {
 	}
 
 	@Override
-	public void record_articulate(int v, boolean isArticulate){
-		artMap.put(v, isArticulate);
+	public void record_articulate(int v){
+		artMap.put(v, true);
 	}
 }

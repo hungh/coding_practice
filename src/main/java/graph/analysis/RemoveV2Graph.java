@@ -79,24 +79,4 @@ public class RemoveV2Graph  extends GraphAL {
 		return true;
 	}
 
-	protected void remove_edge(int x, int y, boolean directed){
-		EdgeNode prev, curr;
-		curr = edges[x];
-		prev = curr;
-		int i = 0;
-		while(curr != null) {
-			if(curr.y == y){
-				if(i == 0) {
-				 	edges[x] = curr.next; 				 	
-					break;
-				} // delete head
-				prev.next = curr.next;
-			}
-			prev = curr;
-			curr = curr.next;
-			i++;
-		}
-		Common.log("\t removing " + x + " " +  y);
-		if(!directed) remove_edge(y, x, true);
-	}
 }

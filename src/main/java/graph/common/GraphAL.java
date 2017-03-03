@@ -62,6 +62,36 @@ public class GraphAL extends Graph {
 		}
 	}
 
+	public void remove_edge(int x, int y, boolean directed){
+		EdgeNode prev, curr;
+		curr = edges[x];
+		prev = curr;
+		int i = 0;
+		while(curr != null) {
+			if(curr.y == y){
+				if(i == 0) {
+				 	edges[x] = curr.next; 				 	
+					break;
+				} // delete head
+				prev.next = curr.next;
+			}
+			prev = curr;
+			curr = curr.next;
+			i++;
+		}
+		Common.log("\t removing " + x + " " +  y);
+		if(!directed) remove_edge(y, x, true);
+	}
+
+	public void remove_vertex(int v){
+		EdgeNode p = edges[v];
+		while(p != null){
+			remove_edge(p.y, v, true);
+			p = p.next;
+		}
+		edges[v] = null;
+	}
+
 	@Override
 	public void print_graph(){
 		EdgeNode p;

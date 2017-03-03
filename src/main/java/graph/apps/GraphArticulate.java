@@ -88,9 +88,10 @@ public class GraphArticulate extends GraphAL {
 		if(time_v < time_parent){
 			reachable_ancestor[parent[v]] = reachable_ancestor[v];
 		}
-		if(isArticulate) record_articulate(v, isArticulate);
-		if(isParentArt) record_articulate(parent[v], isArticulate);
+		if(isArticulate) record_articulate(v); else rm_articulate(v);
+		if(isParentArt) record_articulate(parent[v]); else  rm_articulate(parent[v]);
 	}
 
-	public void record_articulate(int v, boolean isArticulate){}
+	public void record_articulate(int v){}
+	public void rm_articulate(int v){}
 }
