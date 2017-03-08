@@ -1,7 +1,7 @@
 /*
 
 5-23. [5] Your job is to arrange n ill-behaved children in a straight line, facing front. You
-are given a list of m statements of the form “i hates j”. If i hates j, then you do not
+are given a list of m statements of the form "i hates j". If i hates j, then you do not
 want put i somewhere behind j, because then i is capable of throwing something
 at j.
 
