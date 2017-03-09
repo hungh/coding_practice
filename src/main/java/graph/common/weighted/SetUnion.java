@@ -31,7 +31,7 @@ public class SetUnion {
 
 	}
 
-	public boolean same_component(SetUnion s, int s1, int s2){
+	public static boolean same_component(SetUnion s, int s1, int s2){
 		return (find(s, s1) == find(s, s2));
 	}
 
