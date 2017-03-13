@@ -1,5 +1,7 @@
 package graph.common.weighted;
 
+import ds.Common;
+
 public class SetUnion {
 	public static final int SET_SIZE = 1000;
 	public int[] p = new int[SET_SIZE + 1];  // parent elements
@@ -29,6 +31,13 @@ public class SetUnion {
 			s.p[r1] = r2;
 		}
 
+	}
+
+	public void printSet(){
+		Common.log("-- SET --");
+		for(int i = 1; i <= n; i++){
+			Common.log("i = " + i + ";p = " + p[i] + "; size = " + size[i]);
+		}
 	}
 
 	public static boolean same_component(SetUnion s, int s1, int s2){

@@ -2,7 +2,7 @@ package graph.common.weighted;
 
 import java.util.*;
 
-public class EdgePair implements Comparator<EdgePair> {
+public class EdgePair implements Comparable<EdgePair> {
 	public int x;
 	public int y;
 	public int w;
@@ -12,7 +12,7 @@ public class EdgePair implements Comparator<EdgePair> {
 		this.w = w;
 	}
 
-	public int compare(EdgePair t1, EdgePair t2){
-		return t1.w - t2.w;
+	public int compareTo(EdgePair t2){
+		return this.w - t2.w;
 	}
 }

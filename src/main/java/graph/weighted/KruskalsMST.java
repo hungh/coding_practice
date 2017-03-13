@@ -10,20 +10,32 @@ import graph.common.weighted.*;
 
 public class KruskalsMST extends GraphAL {
 	public static void main(String[] args){
+		KruskalsMST g = new KruskalsMST(true, false);
+		g.read_graph("/kruskal_mst.txt");
+		g.print_graph();
+		g.kruskal();
+	}
 
+	public KruskalsMST(boolean weighted, boolean directed){
+		super(directed);
+		this.weighted = weighted;
 	}
 
 	public void kruskal(){
 		SetUnion s = new SetUnion();
 		init_set_union(s, nvertices);
 		EdgePair[] e = to_edge_array();
-		Arrays.sort(e);
+		printEdgePairs(e);
+		Arrays.sort(e, 1, nvertices + 1);
+		Common.log("-- After sorted --");
+		printEdgePairs(e);
 
 		for(int i = 1; i <= nvertices; i++){
 			if(! SetUnion.same_component(s, e[i].x, e[i].y)){
 				SetUnion.union_sets(s, e[i].x, e[i].y);
 			}
 		}
+		s.printSet();
 
 	}
 
@@ -51,6 +63,13 @@ public class KruskalsMST extends GraphAL {
 
 	public KruskalsMST(boolean directed){
 		super(directed);
+	}
+
+	public  void printEdgePairs(EdgePair[] es){
+		if(es != null){
+			for(int i = 1; i <= nvertices; i++) 
+				Common.log("x = " + es[i].x + "; y = " + es[i].y + "; w = " + es[i].w);
+		}
 	}
 
 
