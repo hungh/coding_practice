@@ -15,6 +15,11 @@ public class GraphAM  extends Graph {
 
 	protected int[][] m;
 
+	protected int[][] allocateMemoryAndInit(){
+		if(nvertices < 1) throw new IllegalArgumentException("Invalid number of vertices.");
+		return new int[nvertices + 1][nvertices + 1];
+	}
+
 	public static void main(String[] args){
 		GraphAM g = new GraphAM(false);
 		g.read_graph("/graph5D12.txt");
@@ -39,18 +44,22 @@ public class GraphAM  extends Graph {
 
 	@Override
 	public void insert_edge(int x, int y, boolean _directed){
+		this.insert_edge(x, y, 1, _directed);
+	}
+
+	@Override
+	public void insert_edge(int x, int y, Integer z, boolean _directed){
 		if(m == null){
-			m = new int[nvertices + 1][nvertices + 1];
+			m = allocateMemoryAndInit();
 		}
-		m[x][y] = 1;
+		m[x][y] = z;
 
 		if(!_directed) { // need another direction for undirected graph
-			insert_edge(y, x, true);
+			insert_edge(y, x, z, true);
 		}else{			
 			// count the number edge
 			nedges++;
 		}
-		
 	}
 
 	@Override
@@ -61,6 +70,18 @@ public class GraphAM  extends Graph {
 			}
 			Common.log("");
 		}
+	}
+
+	public void print_graph_pretty(int[][] _m){
+		for(int i = 1; i <= nvertices; i++){
+			for(int j = 1; j <= nvertices; j++){
+				if(_m[i][j] >= Integer.MAX_VALUE) Common._log(" f"); else Common._log(" " +  _m[i][j]);
+			}
+			Common.log("");
+		}	
+		Common.log("-------------------------");
+		Common.log("* f: stands for +Infinite");
+		Common.log("-------------------------");
 	}
 
 	@Override
