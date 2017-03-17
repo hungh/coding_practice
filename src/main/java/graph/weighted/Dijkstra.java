@@ -1,29 +1,24 @@
-/*
-Prim's algorithm to find minimum spanning trees
-*/
-
 package graph.weighted;
 
-import java.util.*;
 import ds.Common;
 import graph.common.*;
 
-
-/* See at P.194 */
-public class PrimsMST extends GraphAL {
+// See Skiena Book. Page 208
+public class Dijkstra extends GraphAL {
 	protected boolean[] intree;
 	protected int[] distance;
 
-	public static void main(String[] args){
-		PrimsMST g = new PrimsMST(true, false);
-		g.read_graph("/prims_mst.txt"); // See Figure 6.3 on Page 196.
-		g.print_graph();		
-		g.prim(1);
-	}
-
-	public PrimsMST(boolean weighted, boolean directed) {
+	public Dijkstra(boolean weighted, boolean directed){
 		super(directed);
 		this.weighted = weighted;
+	}
+
+	public static void main(String[] args){
+		Dijkstra g = new Dijkstra(true, false);
+		g.read_graph("/prims_mst.txt"); // Reused the prims' graph. See Figure 6.3 on Page 196.
+		g.print_graph();
+		g.dijkstra(1);
+		g.print_path(3);
 	}
 
 	public void init() {
@@ -35,8 +30,8 @@ public class PrimsMST extends GraphAL {
 			parent[i] = -1;
 		}
 	}
-
-	public void prim(int start){
+	// almost the same as prims'
+	public void dijkstra(int start){
 		this.init();
 		EdgeNode p;
 		int i;
@@ -54,8 +49,8 @@ public class PrimsMST extends GraphAL {
 				w = p.y;
 				weight = p.weight;
 				// assign all the weights to all of v's neighbors (not intree) who have more weigh than themselves
-				if( (distance[w] > weight) && !intree[w]) {
-					distance[w] = weight;
+				if(distance[w] > (distance[v] + weight)) { // **
+					distance[w] = distance[v] + weight;    // **
 					parent[w] = v; 					
 				}
 				p = p.next;
@@ -69,6 +64,15 @@ public class PrimsMST extends GraphAL {
 					v = i;
 				}			
 		}
+	}
 
+	public void print_path(int end){
+		int v = end;	
+		Common._log("PATH:" + v + " ");	
+		while(parent[v] > 0) {			
+			v = parent[v];
+			Common._log(v +  " ");
+		}
+		Common.log("");
 	}
 }
