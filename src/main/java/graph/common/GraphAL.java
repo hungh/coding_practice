@@ -15,7 +15,7 @@ public class GraphAL extends Graph {
 
 	protected Set<Integer> depths = new HashSet<Integer>();
 
-	public EdgeNode[] edges = new EdgeNode[MAXV + 1]; 
+	public EdgeNode[] edges;
 	
 	public void hard_reset(){
 		for(int i = 1; i <= nvertices; i++) {
@@ -39,8 +39,13 @@ public class GraphAL extends Graph {
 
 	}
 
+	public void init() {
+		this.edges = new EdgeNode[MAXV + 1]; 
+	}
+
 	public GraphAL(boolean directed) {
 		this.directed = directed;
+		this.init();
 	}
 
 	public EdgeNode[] getEdges(){
