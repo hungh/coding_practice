@@ -10,6 +10,5 @@ public class EdgeNodeR extends EdgeNode {
 	 } 
 	
 	public int flow; // flow through edge
-	public int residual; // residual capacity of edge
-	public EdgeNodeR next; // next edge in list
+	public int residual; // residual capacity of edge	
 }

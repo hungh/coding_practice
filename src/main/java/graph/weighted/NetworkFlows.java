@@ -6,6 +6,7 @@ import ds.Common;
 import graph.common.*;
 import graph.common.weighted.*;
 
+// NOTE: not completed ..
 public class NetworkFlows extends GraphAL {
 	public static void main(String[] args){
 		int s = 1; 
@@ -16,6 +17,7 @@ public class NetworkFlows extends GraphAL {
 		g.netflow(s, t);
 	}
 
+	@Override
 	public void init() {
 		this.edges = new EdgeNodeR[MAXV + 1]; 
 	}
@@ -32,11 +34,10 @@ public class NetworkFlows extends GraphAL {
 		EdgeNodeR p = new EdgeNodeR();
 		p.y = y;
 		p.weight = Math.abs(z); // capacity
-
 		if(z > 0) p.residual = z;
 		p.next = (EdgeNodeR)edges[x]; // insert at the head of adjacency list
 		edges[x] = p;
-
+		
 		if(!_directed) { // need another direction for undirected graph
 			insert_edge(y, x, -z, true);
 		}else{
@@ -53,7 +54,7 @@ public class NetworkFlows extends GraphAL {
 		bfs(source);
 
 		volume = path_volume(source, sink, parent);
-
+		
 		while(volume > 0) {
 			augment_path(source, sink, parent, volume);
 			reset();
@@ -63,6 +64,7 @@ public class NetworkFlows extends GraphAL {
 	}
 
 	public int path_volume(int start, int end, int[] parents){
+		Common.log("end: " + end + ";parents[end]: " + parents[end]);
 		if(parents[end] == -1) return 0;
 
 		EdgeNodeR e = find_edge(parents[end], end);
@@ -93,6 +95,7 @@ public class NetworkFlows extends GraphAL {
 		                                            // until we reach the source it stops
 		e.flow += volume;
 		e.residual -= volume;
+	
 
 		// the volume is the residual of the reverse edge
 		e = find_edge (end, parents[end]);
