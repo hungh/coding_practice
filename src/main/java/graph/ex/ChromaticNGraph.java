@@ -43,6 +43,7 @@ public class ChromaticNGraph extends ColorGraph { //TODO: Please see Euler (V - 
 	}
 
 	public void init() {
+		super.init();
 		for(int i = 1; i <= nvertices; i++) color[i] = Color.UNCOLORED.toInt();
 	}
 	

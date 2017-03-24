@@ -22,6 +22,7 @@ public class Dijkstra extends GraphAL {
 	}
 
 	public void init() {
+		super.init();
 		intree = new boolean[nvertices + 1];
 		distance = new int[nvertices + 1];
 

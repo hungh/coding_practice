@@ -26,6 +26,7 @@ public class RemoveV2Graph  extends GraphAL {
 	}
 
 	public void init() {
+		super.init();
 		this.populateVertexDegrees();
 	}
 

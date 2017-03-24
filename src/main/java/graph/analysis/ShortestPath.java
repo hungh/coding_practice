@@ -31,6 +31,7 @@ public class ShortestPath extends TopoSorting {
 
 	// this must be called after the graph is read
 	public void init () {
+		super.init();
 		source = new List[nvertices + 1];
 		distance = new int[nvertices + 1];
 		distance[1] = 0;

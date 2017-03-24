@@ -134,7 +134,10 @@ public class GraphAL extends Graph {
 			process_vertex_early(v);
 			processed[v] = true;
 			p = edges[v];
-			while(p != null){
+			while(p != null){				
+				// -- weighted graph : skip edge that does not have weight (or capacity)
+				if(this.weighted && (p.weight == null || p.weight == 0) ) { p = p.next; continue; } ;
+				//
 				y = p.y;
 				if(! processed[y] || directed) process_edge(v, y);
 				if(! discovered[y]){
@@ -168,6 +171,9 @@ public class GraphAL extends Graph {
 		p = edges[v];
 		if(depth >= 0  &&  (p == null)) depths.add(depth); // Optional: for special graph (tree)
 		while(p != null){
+			// -- weighted graph : skip edge that does not have weight (or capacity)
+			if(this.weighted && (p.weight == null || p.weight == 0) ) { p = p.next; continue; } ;
+			//
 			y = p.y;
 			if(!discovered[y]){
 				parent[y] = v;
