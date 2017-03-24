@@ -89,8 +89,7 @@ public class NetworkFlows extends GraphAL {
 
 		EdgeNodeR e = find_edge(parents[end], end);
 
-		if(start == parents[end]) { // (back edge or residual edge): this edge only has residual value
-			Common.log("saw a back edge at vertex from  " + parents[end] + " -> " + end + "; with residual=" + e.residual);
+		if(start == parents[end]) {  // complete tha path: we actually scaned from end towards start
 			return e.residual;
 		} else {
 			// keep finding the min residual - for the graph in between start end parent of end
