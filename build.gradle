@@ -13,8 +13,12 @@ import org.apache.tools.ant.taskdefs.condition.Os
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'findbugs'
 
 
+dependencies {
+    findbugsPlugins group: 'com.mebigfatguy.fb-contrib', name: 'fb-contrib', version: '6.6.2'
+}
 
 sourceSets {
     main {
@@ -79,6 +83,14 @@ if(myMainClass) {
 }
 
 mainClassName = myMainClass
+
+tasks.withType (FindBugs){
+    reports {
+        xml.enabled = false
+        html.enabled = true        
+    }
+}
+findbugsMain.enabled = false
 
 task wrapper(type: Wrapper){
     gradleVersion = "3.2.1"

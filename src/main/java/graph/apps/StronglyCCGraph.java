@@ -91,7 +91,7 @@ public class StronglyCCGraph extends GraphAL {
 			if(buf == null){
 				buf = new StringBuilder();
 			}
-			componentMap.put(scc[i], buf.append(" ").append(i));
+			componentMap.put(scc[i], buf.append(' ').append(i));
 		}
 		for(Map.Entry<Integer, StringBuilder> ev: componentMap.entrySet()){
 			Common.log("Component " + ev.getKey() + " has :");
