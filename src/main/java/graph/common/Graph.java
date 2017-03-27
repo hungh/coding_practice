@@ -33,6 +33,9 @@ public abstract class Graph {
 	protected int[] entry_time = new int[MAXV + 1];
 	protected int[] exit_time = new int[MAXV + 1];
 
+	public void setWeighted (boolean weighted) {
+		this.weighted = weighted;
+	}
 
 	public void read_graph(String filePath){
 		scanInput(new Scanner(GraphAL.class.getResourceAsStream(filePath), "UTF-8"), false);
