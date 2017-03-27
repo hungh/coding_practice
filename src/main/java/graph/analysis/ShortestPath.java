@@ -30,8 +30,7 @@ public class ShortestPath extends TopoSorting {
 	}
 
 	// this must be called after the graph is read
-	public void init () {
-		super.init();
+	public void init_local() {
 		source = new List[nvertices + 1];
 		distance = new int[nvertices + 1];
 		distance[1] = 0;
@@ -42,7 +41,7 @@ public class ShortestPath extends TopoSorting {
 	}
 
 	public void find_shortest_path() {
-		this.init();
+		this.init_local();
 
 		EdgeNode p; int i;
 		List<Integer> s;
