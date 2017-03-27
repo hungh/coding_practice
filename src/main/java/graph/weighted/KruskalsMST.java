@@ -13,7 +13,7 @@ public class KruskalsMST extends GraphAL {
 	private static final boolean WEIGHTED = true;
 	public static void main(String[] args){
 		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
-		g.read_graph("/kruskal_mst.txt");
+		g.read_graph("/problem6_1_kruskalsmst_b.txt");///kruskal_mst.txt");
 		g.print_graph();
 		Common.log("Minimum Spanning Tree Is: \n");
 		g.kruskal().print_graph();
@@ -30,7 +30,7 @@ public class KruskalsMST extends GraphAL {
 		EdgePair[] e = to_edge_array();		
 		Arrays.sort(e, 1, nvertices + 1);
 		
-		GraphAL mst = getCandidateMST();
+		GraphAL mst = GraphUtils.getNewEmptyGraph(nvertices, WEIGHTED, DIRECTED);
 		int direction;
 		for(int i = 1; i <= nvertices; i++){
 			if(! SetUnion.same_component(s, e[i].x, e[i].y)){
@@ -75,13 +75,5 @@ public class KruskalsMST extends GraphAL {
 			for(int i = 1; i <= nvertices; i++) 
 				Common.log("x = " + es[i].x + "; y = " + es[i].y + "; w = " + es[i].w);
 		}
-	}
-
-	// draw a MST by creating a new graph
-	public GraphAL getCandidateMST() {
-		GraphAL mst = new GraphAL (DIRECTED);
-		mst.setWeighted(WEIGHTED);
-		mst.setNVertices(nvertices);
-		return mst;
 	}
 }

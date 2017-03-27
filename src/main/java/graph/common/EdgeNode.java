@@ -6,4 +6,10 @@ public class EdgeNode {
 	public int y;  // adjancency info
 	public Integer weight;
 	public EdgeNode next;
+
+
+	@Override
+	public String toString() {
+		return new StringBuilder().append("y: ").append(y).append("; weight: ").append(weight).toString();
+	}
 }

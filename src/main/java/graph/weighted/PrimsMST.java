@@ -11,23 +11,26 @@ import graph.common.*;
 
 /* See at P.194 */
 public class PrimsMST extends GraphAL {
+	private static final boolean WEIGHTED = true;
+	private static final boolean DIRECTED = false;
 	protected boolean[] intree;
 	protected int[] distance;
 
 	public static void main(String[] args){
-		PrimsMST g = new PrimsMST(true, false);
+		PrimsMST g = new PrimsMST(WEIGHTED, DIRECTED);
 		g.read_graph("/prims_mst.txt"); // See Figure 6.3 on Page 196.
 		g.print_graph();		
-		g.prim(1);
+		GraphAL mst = g.prim(1);
+		Common.log(".. minimum spanning tree:\n");
+		mst.print_graph();
 	}
 
 	public PrimsMST(boolean weighted, boolean directed) {
 		super(directed);
-		this.weighted = weighted;
+		this.weighted = weighted;		
 	}
 
-	public void init() {
-		super.init();
+	public void init_local() {		
 		intree = new boolean[nvertices + 1];
 		distance = new int[nvertices + 1];
 
@@ -37,8 +40,8 @@ public class PrimsMST extends GraphAL {
 		}
 	}
 
-	public void prim(int start){
-		this.init();
+	public GraphAL prim(int start){	
+		this.init_local()		;
 		EdgeNode p;
 		int i;
 		int v; // current vertex to process
@@ -46,18 +49,23 @@ public class PrimsMST extends GraphAL {
 		int weight; // edge weight
 		int dist;   // best distance from start
 
-		distance[start] = 0;
+		GraphAL mst = GraphUtils.getNewEmptyGraph(nvertices, WEIGHTED, DIRECTED);
+		distance[start] = 0;		
 		v= start;
+
 		while(!intree[v]){			
 			intree[v] = true;  // we already knew v is the best candidate b/c it was picked from the loopp (see the end of this while)
 			p = edges[v];
+			
 			while(p != null){
 				w = p.y;
 				weight = p.weight;
 				// assign all the weights to all of v's neighbors (not intree) who have more weigh than themselves
 				if( (distance[w] > weight) && !intree[w]) {
 					distance[w] = weight;
-					parent[w] = v; 					
+					parent[w] = v; 		
+					Common.log(".. inserting " + v +  " -> " + w + "; weight=" + weight);
+					mst.insert_edge (v, w, weight, directed);			
 				}
 				p = p.next;
 			}
@@ -70,6 +78,6 @@ public class PrimsMST extends GraphAL {
 					v = i;
 				}			
 		}
-
+		return mst;
 	}
 }
