@@ -41,7 +41,7 @@ public class PrimsMST extends GraphAL {
 	}
 
 	public GraphAL prim(int start){	
-		this.init_local()		;
+		this.init_local();
 		EdgeNode p;
 		int i;
 		int v; // current vertex to process
@@ -54,7 +54,7 @@ public class PrimsMST extends GraphAL {
 		v= start;
 
 		while(!intree[v]){			
-			intree[v] = true;  // we already knew v is the best candidate b/c it was picked from the loopp (see the end of this while)
+			intree[v] = true;  // we already knew v is the best candidate b/c it was picked from the loop (see the end of this while)
 			p = edges[v];
 			
 			while(p != null){
@@ -63,9 +63,7 @@ public class PrimsMST extends GraphAL {
 				// assign all the weights to all of v's neighbors (not intree) who have more weigh than themselves
 				if( (distance[w] > weight) && !intree[w]) {
 					distance[w] = weight;
-					parent[w] = v; 		
-					Common.log(".. inserting " + v +  " -> " + w + "; weight=" + weight);
-					mst.insert_edge (v, w, weight, directed);			
+					parent[w] = v; 															
 				}
 				p = p.next;
 			}
@@ -76,7 +74,8 @@ public class PrimsMST extends GraphAL {
 				if(!intree[i] && (dist > distance[i])) {
 					dist = distance[i];
 					v = i;
-				}			
+				}		
+			if(parent[v] > 0) mst.insert_edge (parent[v], v, directed);
 		}
 		return mst;
 	}
