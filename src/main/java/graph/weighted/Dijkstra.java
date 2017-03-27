@@ -18,11 +18,10 @@ public class Dijkstra extends GraphAL {
 		g.read_graph("/prims_mst.txt"); // Reused the prims' graph. See Figure 6.3 on Page 196.
 		g.print_graph();
 		g.dijkstra(1);
-		g.print_path(3);
+		g.print_path(7);
 	}
 
-	public void init() {
-		super.init();
+	public void init_local() {
 		intree = new boolean[nvertices + 1];
 		distance = new int[nvertices + 1];
 
@@ -33,7 +32,7 @@ public class Dijkstra extends GraphAL {
 	}
 	// almost the same as prims'
 	public void dijkstra(int start){
-		this.init();
+		this.init_local();
 		EdgeNode p;
 		int i;
 		int v; // current vertex to process
