@@ -42,7 +42,20 @@ public class IncrementalMST extends PrimsMST {
 	}
 
 	public EdgeNode getMaxNeighborEdge(int u, int v, GraphAL mst){
-		return null;
+		mst.dfs(u);
+		int[] mst_parent = mst.getParents();
+		int e = v;
+
+		EdgeNode ev = find_edge (mst_parent[v], v);
+		EdgeNode maxEdge = ev;
+
+		while(mst_parent[e] != u) {
+			e = mst_parent[e];
+		} 
+
+		EdgeNode ue = find_edge(u, e);
+		if(ev.weight < ue.weight) maxEdge = ue;
+		return maxEdge;
 	}
 
 }

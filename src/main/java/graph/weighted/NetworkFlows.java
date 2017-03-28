@@ -87,7 +87,7 @@ public class NetworkFlows extends GraphAL {
 			return 0;
 		}
 
-		EdgeNodeR e = find_edge(parents[end], end);
+		EdgeNodeR e = (EdgeNodeR)find_edge(parents[end], end);
 
 		if(start == parents[end]) {  // complete tha path: we actually scaned from end towards start
 			return e.residual;
@@ -98,21 +98,10 @@ public class NetworkFlows extends GraphAL {
 		
 	}
 
-	public EdgeNodeR find_edge (int x, int y){
-		EdgeNode p = edges [x];
-
-		while(p != null){
-			if(p.y == y) return (EdgeNodeR)p;
-			p = p.next;
-		}
-		Common.log("[ERROR] cannot find edge " + x + " -> " + y);
-		return null;
-	}
-
 	public void augment_path(int start, int end, int[] parents, int volume) {
 		if(start == end) return; // there is nothing in between to augment
 
-		EdgeNodeR e = find_edge(parents[end], end); // think of it as a reverse flow moving from end to start
+		EdgeNodeR e = (EdgeNodeR)find_edge(parents[end], end); // think of it as a reverse flow moving from end to start
 		                                            // until we reach the source it stops
 		e.flow += volume;
 		e.weight -= e.flow; // capacity reduce by flow
@@ -120,7 +109,7 @@ public class NetworkFlows extends GraphAL {
 	
 
 		// the volume is the residual of the reverse edge
-		e = find_edge (end, parents[end]);
+		e = (EdgeNodeR)find_edge (end, parents[end]);
 		e.residual += volume;
 
 		Common.log("augmenting " + parents[end] + " -> " + end);

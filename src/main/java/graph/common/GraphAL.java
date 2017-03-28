@@ -52,6 +52,17 @@ public class GraphAL extends Graph {
 		return this.edges;
 	}
 
+	public EdgeNode find_edge (int x, int y){
+		EdgeNode p = edges [x];
+
+		while(p != null){
+			if(p.y == y) return p;
+			p = p.next;
+		}
+		Common.log("[ERROR] cannot find edge " + x + " -> " + y);
+		return null;
+	}
+
 	@Override
 	public void insert_edge(int x, int y, Integer z, boolean _directed){ // z: weight of the edge
 		EdgeNode p = new EdgeNode();

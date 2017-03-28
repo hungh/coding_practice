@@ -49,6 +49,10 @@ public abstract class Graph {
 		return nvertices;
 	}
 
+	public int[] getParents() {
+		return this.parent;
+	}
+
 	public void setNVertices(int nvertices){
 		this.nvertices = nvertices;
 	}
