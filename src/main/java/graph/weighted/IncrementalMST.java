@@ -27,13 +27,18 @@ public class IncrementalMST extends PrimsMST {
 	public static void main(String[] args){
 
 		IncrementalMST g = new IncrementalMST(true, DIRECTED);
-		g.read_graph("/incremental_mst.txt");
+		g.read_graph("/remove1.txt");
 		g.print_graph();
 		GraphAL mst = g.prim(1);
 
-		// adding (u,v)
-		int u = 3, v = 4, w = 7;
-		// mst.insert_edge (u, v, w, DIRECTED);
+		Common.log("original mst =>");
+		mst.print_graph();
+
+		int u = 1, v = 6, w = 4;
+		g.updateMST(u, v, w, mst);
+
+		Common.log("modified mst =>");
+		mst.print_graph();
 
 	}
 
@@ -41,21 +46,26 @@ public class IncrementalMST extends PrimsMST {
 		super(weighted, directed);
 	}
 
-	public EdgeNode getMaxNeighborEdge(int u, int v, GraphAL mst){
-		mst.dfs(u);
-		int[] mst_parent = mst.getParents();
+	// w: weight of u -> v
+	public void updateMST(int u, int v, int w, GraphAL mst){
+		mst.bfs(u);
+		int[] mst_parent = mst.getParents();		
 		int e = v;
-
+		int r = mst_parent[v];
+		
 		EdgeNode ev = find_edge (mst_parent[v], v);
 		EdgeNode maxEdge = ev;
 
-		while(mst_parent[e] != u) {
-			e = mst_parent[e];
-		} 
+		while(mst_parent[e] != u) e = mst_parent[e];
 
 		EdgeNode ue = find_edge(u, e);
-		if(ev.weight < ue.weight) maxEdge = ue;
-		return maxEdge;
+		if(ev.weight < ue.weight) {
+			r = u;
+			maxEdge = ue;
+		}
+		Common.log("maxEdge=" + maxEdge.weight);
+		if(maxEdge.weight > w) {
+			mst.remove_edge(r, maxEdge.y, directed);
+		}		
 	}
-
 }

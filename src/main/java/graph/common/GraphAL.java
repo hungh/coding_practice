@@ -147,7 +147,7 @@ public class GraphAL extends Graph {
 			p = edges[v];
 			while(p != null){				
 				// -- weighted graph : skip edge that does not have weight (or capacity)
-				if(this.weighted && (p.weight == null || p.weight == 0) ) { p = p.next; continue; } ;
+				if(this.weighted && (p.weight == null || p.weight == 0) ) { p = p.next; continue; } 
 				//
 				y = p.y;
 				if(! processed[y] || directed) process_edge(v, y);

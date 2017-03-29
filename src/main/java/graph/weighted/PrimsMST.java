@@ -75,7 +75,8 @@ public class PrimsMST extends GraphAL {
 					dist = distance[i];
 					v = i;
 				}		
-			if(parent[v] > 0) mst.insert_edge (parent[v], v, directed);
+			if(parent[v] > 0)
+				mst.insert_edge (parent[v], v, dist, directed); 
 		}
 		return mst;
 	}
