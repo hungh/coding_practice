@@ -6,6 +6,9 @@ public class EdgePair implements Comparable<EdgePair> {
 	public int x;
 	public int y;
 	public int w;
+
+	// indicator to tell if this edge is mst-edge
+	public boolean mst;
 	public EdgePair(int x, int y, int w){
 		this.x = x;
 		this.y = y;

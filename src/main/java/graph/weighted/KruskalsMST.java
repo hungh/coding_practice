@@ -10,7 +10,7 @@ import graph.common.weighted.*;
 
 public class KruskalsMST extends GraphAL {
 	private static final boolean DIRECTED = false;
-	private static final boolean WEIGHTED = true;
+	private static final boolean WEIGHTED = true;	
 	public static void main(String[] args){
 		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
 		g.read_graph("/figure6_3.txt");///kruskal_mst.txt");
@@ -35,6 +35,7 @@ public class KruskalsMST extends GraphAL {
 		for(EdgePair ep: e){
 			if(! SetUnion.same_component(s, ep.x, ep.y)){
 				direction = SetUnion.union_sets(s, ep.x, ep.y);
+				ep.mst = true;
 				if(direction > 0) 
 					mst.insert_edge (ep.x, ep.y, ep.w, directed);
 				else if (direction < 0)
