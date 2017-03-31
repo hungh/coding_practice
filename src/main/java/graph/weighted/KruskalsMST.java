@@ -11,6 +11,7 @@ import graph.common.weighted.*;
 public class KruskalsMST extends GraphAL {
 	private static final boolean DIRECTED = false;
 	private static final boolean WEIGHTED = true;	
+	protected List<EdgePair> e;
 	public static void main(String[] args){
 		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
 		g.read_graph("/figure6_3.txt");///kruskal_mst.txt");
@@ -27,7 +28,7 @@ public class KruskalsMST extends GraphAL {
 	public GraphAL kruskal(){
 		SetUnion s = new SetUnion();
 		init_set_union(s, nvertices);
-		List<EdgePair> e = to_edge_array();		
+		e = to_edge_array();		
 		Collections.sort(e);
 		
 		GraphAL mst = GraphUtils.getNewEmptyGraph(nvertices, WEIGHTED, DIRECTED);
@@ -42,6 +43,7 @@ public class KruskalsMST extends GraphAL {
 					mst.insert_edge (ep.y, ep.x, ep.w, directed);
 			}
 		}
+
 		return mst;
 	}
 
