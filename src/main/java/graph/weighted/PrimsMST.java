@@ -18,9 +18,9 @@ public class PrimsMST extends GraphAL {
 
 	public static void main(String[] args){
 		PrimsMST g = new PrimsMST(WEIGHTED, DIRECTED);
-		g.read_graph("/prims_mst.txt"); // See Figure 6.3 on Page 196.
+		g.read_graph("/figure6_3.txt"); // See Figure 6.3 on Page 196.
 		g.print_graph();		
-		GraphAL mst = g.prim(1);
+		GraphAL mst = g.prim(4);
 		Common.log(".. minimum spanning tree:\n");
 		mst.print_graph();
 	}
@@ -75,8 +75,10 @@ public class PrimsMST extends GraphAL {
 					dist = distance[i];
 					v = i;
 				}		
-			if(parent[v] > 0)
+			if(parent[v] > 0 && (dist < Integer.MAX_VALUE)) {
+				Common.log("connecting " + parent[v] + " -> " + v + " w= " + dist);
 				mst.insert_edge (parent[v], v, dist, directed); 
+			}
 		}
 		return mst;
 	}

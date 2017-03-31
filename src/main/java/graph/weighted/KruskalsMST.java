@@ -13,7 +13,7 @@ public class KruskalsMST extends GraphAL {
 	private static final boolean WEIGHTED = true;
 	public static void main(String[] args){
 		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
-		g.read_graph("/problem6_1_kruskalsmst.txt");///kruskal_mst.txt");
+		g.read_graph("/figure6_3.txt");///kruskal_mst.txt");
 		g.print_graph();
 		Common.log("Minimum Spanning Tree Is: \n");
 		g.kruskal().print_graph();
