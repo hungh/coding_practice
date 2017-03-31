@@ -13,7 +13,7 @@ public class KruskalsMST extends GraphAL {
 	private static final boolean WEIGHTED = true;
 	public static void main(String[] args){
 		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
-		g.read_graph("/problem6_1_kruskalsmst_b.txt");///kruskal_mst.txt");
+		g.read_graph("/problem6_1_kruskalsmst.txt");///kruskal_mst.txt");
 		g.print_graph();
 		Common.log("Minimum Spanning Tree Is: \n");
 		g.kruskal().print_graph();
@@ -27,18 +27,18 @@ public class KruskalsMST extends GraphAL {
 	public GraphAL kruskal(){
 		SetUnion s = new SetUnion();
 		init_set_union(s, nvertices);
-		EdgePair[] e = to_edge_array();		
-		Arrays.sort(e, 1, nvertices + 1);
+		List<EdgePair> e = to_edge_array();		
+		Collections.sort(e);
 		
 		GraphAL mst = GraphUtils.getNewEmptyGraph(nvertices, WEIGHTED, DIRECTED);
 		int direction;
-		for(int i = 1; i <= nvertices; i++){
-			if(! SetUnion.same_component(s, e[i].x, e[i].y)){
-				direction = SetUnion.union_sets(s, e[i].x, e[i].y);
+		for(EdgePair ep: e){
+			if(! SetUnion.same_component(s, ep.x, ep.y)){
+				direction = SetUnion.union_sets(s, ep.x, ep.y);
 				if(direction > 0) 
-					mst.insert_edge (e[i].x, e[i].y, e[i].w, directed);
+					mst.insert_edge (ep.x, ep.y, ep.w, directed);
 				else if (direction < 0)
-					mst.insert_edge (e[i].y, e[i].x, e[i].w, directed);
+					mst.insert_edge (ep.y, ep.x, ep.w, directed);
 			}
 		}
 		return mst;
@@ -53,13 +53,13 @@ public class KruskalsMST extends GraphAL {
 		s.n = n;
 	}
 
-	public EdgePair[] to_edge_array(){
+	public List<EdgePair> to_edge_array(){
 		EdgeNode p;
-		EdgePair[] pairs = new EdgePair[nvertices + 1];
+		List<EdgePair> pairs = new ArrayList<EdgePair>();
 		for(int i = 1; i <= nvertices; i++) {
 			p = edges[i];
 			while(p != null){
-				pairs[i] = new EdgePair(i, p.y, p.weight);
+				pairs.add(new EdgePair(i, p.y, p.weight));
 				p = p.next;
 			}
 		}
