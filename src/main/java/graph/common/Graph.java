@@ -45,6 +45,10 @@ public abstract class Graph {
 		scanInput(new Scanner(System.in), true);
 	}
 
+	public int[] getExitTimes() {
+		return this.exit_time;
+	}
+
 	public int getNVertices() {
 		return nvertices;
 	}

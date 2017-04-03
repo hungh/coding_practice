@@ -33,4 +33,9 @@ public class EdgePair implements Comparable<EdgePair> {
 	public int hashCode () {
 		return new StringBuilder(x).append(y).toString().hashCode();
 	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder().append(x).append(" -> ").append(y).append(" w = ").append(w).append("; mst= ").append(mst).toString();
+	}
 }
