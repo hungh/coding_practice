@@ -267,4 +267,18 @@ public class GraphAL extends Graph {
 			degree[i] += tnode;
 		}	
 	}
+
+	/*
+	Flip sign of all edges' weights
+	*/
+	protected void negateWeightEdges() {
+		EdgeNode p;
+		for(int i = 1; i <= nvertices; i++){
+			p = edges[i];
+			while(p != null) {
+				p.weight = -p.weight;
+				p = p.next;
+			}
+		}
+	}
 }
