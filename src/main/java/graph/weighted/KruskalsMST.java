@@ -59,13 +59,16 @@ public class KruskalsMST extends GraphAL {
 	public List<EdgePair> to_edge_array(){
 		EdgeNode p;
 		List<EdgePair> pairs = new ArrayList<EdgePair>();
+		Set<EdgePair> uniqPairs = new HashSet<EdgePair>();
+
 		for(int i = 1; i <= nvertices; i++) {
 			p = edges[i];
 			while(p != null){
-				pairs.add(new EdgePair(i, p.y, p.weight));
+				uniqPairs.add(new EdgePair(i, p.y, p.weight));
 				p = p.next;
 			}
 		}
+		for(EdgePair up: uniqPairs) pairs.add(up);
 		return pairs;
 	}
 

@@ -37,9 +37,11 @@ When considering an edge:
 public class Problem6_9 extends KruskalsMST {
 	public static void main(String[] args){
 		Problem6_9 g = new Problem6_9();
-		g.read_graph("/figure6_3.txt");
+		g.read_graph("/figure6_3_neg.txt");
 		g.print_graph();
-		g.getMinWeightSetT();
+		Graph gp = g.getMinWeightSetT();
+		Common.log(" (*) Subset T:\n");
+		gp.print_graph();
 
 	}
 	public Problem6_9() {
@@ -73,27 +75,6 @@ public class Problem6_9 extends KruskalsMST {
 		return minT;
 	}
 
-	@Override
-	public List<EdgePair> to_edge_array(){
-		EdgeNode p;
-		List<EdgePair> pairs = new ArrayList<EdgePair>();
-		Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
-		Integer r;
-		for(int i = 1; i <= nvertices; i++) {
-			p = edges[i];
-			while(p != null){
-				r = cache.get(p.y);
-				if(r == null) {
-					cache.put(p.y, i);
-				} else if (r == i){
-					continue;
-				}
-				pairs.add(new EdgePair(i, p.y, p.weight));
-				p = p.next;
-			}
-		}
-		return pairs;
-	}
 }
 
 

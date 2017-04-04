@@ -2,6 +2,7 @@ package graph.common.weighted;
 
 import java.util.*;
 
+//undirected
 public class EdgePair implements Comparable<EdgePair> {
 	public int x;
 	public int y;
@@ -17,9 +18,13 @@ public class EdgePair implements Comparable<EdgePair> {
 
 	@Override
 	public boolean equals(Object another) {
+
 		if(another instanceof EdgePair){
 			EdgePair epair2 = (EdgePair)another;
-			return (x == epair2.x) && (y == epair2.y) && (w == epair2.w);
+			return (w == epair2.w) && (mst == epair2.mst) && (
+				(x == epair2.x) && (y == epair2.y) ||
+				(x == epair2.y) && (y == epair2.x)
+				) ;
 		}
 		return false;
 	}
@@ -31,7 +36,13 @@ public class EdgePair implements Comparable<EdgePair> {
 
 	@Override
 	public int hashCode () {
-		return new StringBuilder(x).append(y).toString().hashCode();
+		int u, v;
+		if(x < y) {
+			u = x; v = y;
+		} else {
+			u = y; v = x;
+		}
+		return new StringBuilder(u).append(v).append(w).append(mst).toString().hashCode();
 	}
 
 	@Override

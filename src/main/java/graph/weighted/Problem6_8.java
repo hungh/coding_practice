@@ -45,17 +45,6 @@ public class Problem6_8 extends KruskalsMST {
 		GraphAL mstTree = kruskal();
 		Common.log("-> MST: \n");
 		mstTree.print_graph();
-
-		// Adjust edges: (u,v): true is always appears before false
-		Map<Integer, Integer> cache = new HashMap<Integer, Integer> () ;
-		Integer r;
-		for(EdgePair ep: e) {
-			r = cache.get(ep.x);
-			if(r != null && ep.y == r) ep.mst = true; 				
-			if(ep.mst) cache.put(ep.y, ep.x);
-		}
-		
-		//
 		EdgePair retEdge = null;
 
 		// by doing this, we get the direction of an edge (or path) by looking at the exit_time[v]
