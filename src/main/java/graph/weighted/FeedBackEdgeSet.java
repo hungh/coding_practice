@@ -33,14 +33,14 @@ public class FeedBackEdgeSet extends KruskalsMST {
 		FeedBackEdgeSet g = new FeedBackEdgeSet();
 		g.read_graph("/figure6_3.txt");
 		g.print_graph();
-		Common.log(" Minimum size feedback-edge set: [here we make it a graph to be easily visualized]");
-		g.getMinSizeFES().print_graph();
+		
+		// g.getMinSizeFES().print_graph(); // uncomment to run
+		g.getMinWeightFES().print_graph();
 	}
 
 	public FeedBackEdgeSet(){
 		super(WEIGHTED, DIRECTED);
 	}
-
 
 	public GraphAL getMinSizeFES() {
 		kruskal();
@@ -48,8 +48,19 @@ public class FeedBackEdgeSet extends KruskalsMST {
 		// e: all edge pairs
 		for(EdgePair ep: e) {
 			if(!ep.mst) minFES.insert_edge (ep.x, ep.y, ep.w, directed);
-		}
+		}		
 		return minFES;
 	}
 
+	// Don't call this together with 'getMinSizeFES'
+	public GraphAL getMinWeightFES(){
+		negateWeightEdges();
+		Common.log(" [*] Maximum Spanning Tree:\n");
+		kruskal().print_graph();
+		Common.log("----");
+		Common.log(" Minimum weight feedback-edge set: [here we make it a graph to be easily visualized]");
+		return getMinSizeFES();
+	}
+
 }
+
