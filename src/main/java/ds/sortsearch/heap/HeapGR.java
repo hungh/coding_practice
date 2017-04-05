@@ -6,15 +6,18 @@ Heap that supports heap nodes as objects
 */
 @SuppressWarnings("unchecked")
 public class HeapGR <T extends Comparable> {
+	private static final int DEF_LEN = 10;
 	private T[] a;
 	private int n;
 
 	public HeapGR(Class<T> c){
-		a = (T[]) Array.newInstance(c, 10);		
+		a = (T[]) Array.newInstance(c, DEF_LEN);		
 	}
 
 	public HeapGR(T[] ai, Class<T> c){
-		this.a = (T[]) Array.newInstance(c, ai.length + 2);		
+		int len = DEF_LEN;
+		if(ai.length > len)  len = ai.length + 2;
+		this.a = (T[]) Array.newInstance(c, len);		
 		heapify(ai);
 	}
 
@@ -43,6 +46,13 @@ public class HeapGR <T extends Comparable> {
 		for(i = 0; i < input_array.length; i++){
 			insert(input_array[i]);
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buff = new StringBuilder();
+		for(T el: a) buff.append(el).append('\n');
+		return buff.toString();
 	}
 
 	private void expand(){
