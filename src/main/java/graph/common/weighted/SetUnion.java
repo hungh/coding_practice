@@ -40,4 +40,12 @@ public class SetUnion {
 		return (find(s, s1) == find(s, s2));
 	}
 
+	@Override
+	public String toString(){
+		StringBuilder b = new StringBuilder();
+		for(int i = 1; i <= n; i++)
+			b.append("parent_of [").append(i).append("] =").append(p[i]).append("; size=").append(size[i]).append('\n');
+		return b.toString();
+	}
+
 }

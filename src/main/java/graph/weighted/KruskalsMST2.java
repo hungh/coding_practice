@@ -7,26 +7,28 @@ import ds.Common;
 import graph.common.*;
 import graph.common.weighted.*;
 
-
-public class KruskalsMST extends GraphAL {
+/*
+Kruskal using Path compression Union-Find Set with link by rank
+*/
+public class KruskalsMST2 extends GraphAL {
 	private static final boolean DIRECTED = false;
 	private static final boolean WEIGHTED = true;	
 	protected List<EdgePair> e;
 	public static void main(String[] args){
-		KruskalsMST g = new KruskalsMST(WEIGHTED, DIRECTED);
-		g.read_graph("/figure6_3.txt");///kruskal_mst.txt");
+		KruskalsMST2 g = new KruskalsMST2(WEIGHTED, DIRECTED);
+		g.read_graph("/figure6_3.txt");
 		g.print_graph();
 		Common.log("Minimum Spanning Tree Is: \n");
 		g.kruskal().print_graph();
 	}
 
-	public KruskalsMST(boolean weighted, boolean directed){
+	public KruskalsMST2(boolean weighted, boolean directed){
 		super(directed);
 		this.weighted = weighted;
 	}
 
 	public GraphAL kruskal(){
-		SetUnion s = new SetUnion();
+		SetUnionPC s = new SetUnionPC();
 		init_set_union(s, nvertices);
 		e = to_edge_array();		
 		Collections.sort(e);
@@ -34,8 +36,8 @@ public class KruskalsMST extends GraphAL {
 		GraphAL mst = GraphUtils.getNewEmptyGraph(nvertices, WEIGHTED, DIRECTED);
 		int direction;
 		for(EdgePair ep: e){
-			if(! SetUnion.same_component(s, ep.x, ep.y)){
-				direction = SetUnion.union_sets(s, ep.x, ep.y);
+			if(! SetUnionPC.same_component(s, ep.x, ep.y)){
+				direction = SetUnionPC.union_sets(s, ep.x, ep.y);
 				ep.mst = true;
 				if(direction > 0) 
 					mst.insert_edge (ep.x, ep.y, ep.w, directed);
@@ -43,17 +45,14 @@ public class KruskalsMST extends GraphAL {
 					mst.insert_edge (ep.y, ep.x, ep.w, directed);
 			}
 		}
-		Common.log("\n -- Set Union: \n" + s);
+		Common.log("\n -- Set Union (using Path Compression): \n" + s);
 		return mst;
 	}
 
 	// n: the number of elements in the set su
-	public void init_set_union(SetUnion s, int n) {
-		for(int i = 1; i <= n; i++) {
-			s.p[i] = i;
-			s.size[i] = 1;
-		}
-		s.n = n;
+	public void init_set_union(SetUnionPC s, int n) {
+		for(int i = 1; i <= n; i++) s.p[i] = i;		
+		s.n = n;	
 	}
 
 	public List<EdgePair> to_edge_array(){
@@ -72,7 +71,7 @@ public class KruskalsMST extends GraphAL {
 		return pairs;
 	}
 
-	public KruskalsMST(boolean directed){
+	public KruskalsMST2(boolean directed){
 		super(directed);
 	}
 
