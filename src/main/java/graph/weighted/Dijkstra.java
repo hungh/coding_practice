@@ -2,11 +2,13 @@ package graph.weighted;
 
 import ds.Common;
 import graph.common.*;
+import graph.common.weighted.*;
 
 // See Skiena Book. Page 208
 public class Dijkstra extends GraphAL {
 	protected boolean[] intree;
 	protected int[] distance;
+	protected int[] vweights; // weights of vertices (Optional)
 
 	public Dijkstra(boolean weighted, boolean directed){
 		super(directed);
@@ -17,7 +19,20 @@ public class Dijkstra extends GraphAL {
 		Dijkstra g = new Dijkstra(true, false);
 		g.read_graph("/prims_mst.txt"); // Reused the prims' graph. See Figure 6.3 on Page 196.
 		g.print_graph();
-		g.dijkstra(1);
+
+		WeightCalFunc calFunc = new WeightCalFunc() {
+			public void calculate(int v, EdgeNode p, int[] distance, int[] parent, int[] vws){
+				int w = p.y;
+				int weight = p.weight;
+				// assign all the weights to all of v's neighbors (not intree) who have more weigh than themselves
+				if(distance[w] > (distance[v] + weight)) { // **
+					distance[w] = distance[v] + weight;    // **
+					parent[w] = v; 					
+				}
+			}
+		};
+
+		g.dijkstra(1, calFunc);
 		g.print_path(7);
 	}
 
@@ -31,7 +46,7 @@ public class Dijkstra extends GraphAL {
 		}
 	}
 	// almost the same as prims'
-	public void dijkstra(int start){
+	public void dijkstra(int start, WeightCalFunc calFunc){
 		this.init_local();
 		EdgeNode p;
 		int i;
@@ -46,13 +61,7 @@ public class Dijkstra extends GraphAL {
 			intree[v] = true;  // we already knew v is the best candidate b/c it was picked from the loopp (see the end of this while)
 			p = edges[v];
 			while(p != null){
-				w = p.y;
-				weight = p.weight;
-				// assign all the weights to all of v's neighbors (not intree) who have more weigh than themselves
-				if(distance[w] > (distance[v] + weight)) { // **
-					distance[w] = distance[v] + weight;    // **
-					parent[w] = v; 					
-				}
+				calFunc.calculate(v, p, distance, parent, vweights);
 				p = p.next;
 			}
 			v = 1;
