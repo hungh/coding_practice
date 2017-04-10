@@ -36,8 +36,8 @@ public class KruskalsMST extends GraphAL {
 		for(EdgePair ep: e){
 			if(! SetUnion.same_component(s, ep.x, ep.y)){
 				direction = SetUnion.union_sets(s, ep.x, ep.y);
-				ep.mst = true;
-				if(direction > 0) 
+				ep.mst = true;				
+				if(directed || direction > 0) 
 					mst.insert_edge (ep.x, ep.y, ep.w, directed);
 				else if (direction < 0)
 					mst.insert_edge (ep.y, ep.x, ep.w, directed);
