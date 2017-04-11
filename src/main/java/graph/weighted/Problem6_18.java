@@ -33,6 +33,70 @@ public class Problem6_18 extends Dijkstra {
 		super(WEIGHTED, DIRECTED);
 	}
 
+	public void reset_local() {
+		for(int i = 1; i <= nvertices; i++) distance[i] = Integer.MAX_VALUE;
+	}
+	
+	public void getShortestPathACase(int start, int end) {
+		reset_local();
+		bfs(start);
+		int v = end;
+		Common._log(" (*) Shortest path when each edge has 0 weight and each vertex has 1 weight: " + v + ' ');
+		while(parent[v] != start){
+			Common._log(" - " + parent[v]);
+			v = parent[v];
+		}
+		Common.log(" - " + parent[v]);
+		
+	}
+
+	// Cv = 1 for all 1 <= v <= nvertices
+	// Cxy = 0 for all (xy) belonging to E
+	// to solve (a)
+	// the shortest path from a -> b is the smallest number of hops between a and b
+	// we can solve this by using bfs
+	public void process_edge(int x, int y){
+		super.process_edge(x, y);
+		if(distance[y] > distance[x] + 1) {
+			distance[y] = distance[x] + 1;
+			parent[y] = x;
+		}
+	}
+
+	@Override
+	public void bfs(int start){
+		LinkedList<Integer> q = new LinkedList<Integer>();
+		int i,
+		v, // current vertex
+		y; // successor vertex
+		EdgeNode p;
+		for(i = 1; i <= nvertices; i++) parent[i] = -1;
+
+		q.push(start);
+		discovered[start]= true;
+		distance[start] = 0;
+
+		while(! q.isEmpty()){
+			v = q.pop();
+			process_vertex_early(v);
+			processed[v] = true;
+			p = edges[v];
+			while(p != null){								
+				y = p.y;
+				if(! processed[y] || directed) process_edge(v, y);
+				if(! discovered[y]){
+					q.push(y);
+					discovered[y] = true;
+					parent[y] = v;
+				}
+				p = p.next;
+
+				after_checking_aneighbor(v, y);
+			}
+			process_vertex_late(v);
+		}
+	}
+
 	public static void main(String[] args){
 		Problem6_18 g = new Problem6_18(false);
 		g.read_graph("/problem6_18.txt");
@@ -51,6 +115,7 @@ public class Problem6_18 extends Dijkstra {
 
 		g.dijkstra(1, calFunc);
 		g.print_path(5);
+		g.getShortestPathACase(1, 5);
 	}
 
 	@Override
