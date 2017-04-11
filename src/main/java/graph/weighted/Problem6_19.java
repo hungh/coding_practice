@@ -18,7 +18,7 @@ public class Problem6_19 extends Floyd {
 	public static void main(String[] args) {
 		Problem6_19 g = new Problem6_19(true, true);
 		g.setDiameter(20);
-		g.read_graph("/problem6_19.2.txt"); // Reused prims' See Figure 6.3 on Page 196.
+		g.read_graph("/problem6_19.2.txt"); // see problem6_19.png
 		g.print_graph_pretty(g.getMatrix());		
 		g.floyd();
 		Common.log("Calculating shortest paths matrix ...");
