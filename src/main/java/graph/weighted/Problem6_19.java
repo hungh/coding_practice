@@ -80,7 +80,7 @@ public class Problem6_19 extends Floyd {
 					} 
 				}
 
-		if(start > 0){
+		if(start > 0 && (start != middle)){ // at least 1 edge in the cycle
 			Common.log("Min Cycle Weight: " + minCycWeight);
 			int v = middle;
 			Common._log("(*) Min Cycle Path: " + middle);
