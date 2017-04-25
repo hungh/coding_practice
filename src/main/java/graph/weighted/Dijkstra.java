@@ -16,8 +16,8 @@ public class Dijkstra extends GraphAL {
 	}
 
 	public static void main(String[] args){
-		Dijkstra g = new Dijkstra(true, false);
-		g.read_graph("/prims_mst.txt"); // Reused the prims' graph. See Figure 6.3 on Page 196.
+		Dijkstra g = new Dijkstra(true, true);
+		g.read_graph("/dijkstra.txt"); // Reused the prims' graph. See Figure 6.3 on Page 196.
 		g.print_graph();
 
 		WeightCalFunc calFunc = new WeightCalFunc() {
@@ -33,7 +33,7 @@ public class Dijkstra extends GraphAL {
 		};
 
 		g.dijkstra(1, calFunc);
-		g.print_path(7);
+		g.print_path(5);
 	}
 
 	public void init_local() {

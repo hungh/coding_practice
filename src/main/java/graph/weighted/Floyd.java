@@ -1,11 +1,13 @@
 package graph.weighted;
 
+import java.util.*;
 import ds.Common;
 import graph.common.*;
 
 public class Floyd extends GraphAM {
 	protected int diameter;
 	protected int[][] weight;
+	protected int[][] next;  // matrix to reconstruct the shortest path
 
 	public Floyd(boolean weighted, boolean directed) {
 		super(directed);
@@ -13,14 +15,28 @@ public class Floyd extends GraphAM {
 	}
 
 	public static void main(String[] args){
-		Floyd g = new Floyd(true, false);
+		Floyd g = new Floyd(true, true);
 		g.setDiameter(42);
-		g.read_graph("/prims_mst.txt"); // Reused prims' See Figure 6.3 on Page 196.
+		g.read_graph("/floyd.txt"); // works for non-cyclic negative weighted graphs (DAG)
+		g.init_local();
 		g.print_graph_pretty(g.getMatrix());		
 		g.floyd();
+		Common.log("s path:" + g.print_spath(1, 5));
 		Common.log("Calculating shortest paths matrix ...");
 		g.print_graph_pretty(g.getShortedPathMatrix());
 	}
+
+	public void init_local() {
+		next = new int[nvertices + 1][nvertices + 1];	
+		for(int i = 1; i <= nvertices; i++)
+			for(int j= 1; j <= nvertices; j++){
+				if(m[i][j] < diameter -1)
+					next[i][j] = j;
+				else
+					next[i][j] = -1;
+			}
+	}
+
 
 	public int getDiameter(){
 		return this.diameter;
@@ -57,8 +73,24 @@ public class Floyd extends GraphAM {
 			for(i = 1; i <= nvertices; i++)
 				for(j = 1; j <= nvertices; j++){
 					through_k = weight[i][k] + weight[k][j];
-					if(through_k < weight[i][j]) weight[i][j] = through_k;
+					if(through_k < weight[i][j]) { 
+						weight[i][j] = through_k;
+						next[i][j] = next[i][k]; // we know that k is next to i. Therefore, we don't need j anymore
+					}
 				}
+	}
+
+	public List<Integer> print_spath(int u, int v){		
+		List<Integer> path = new ArrayList<Integer>();
+		if( next[u][v] < 0) return path;
+		
+		path.add(u); // start from u
+		while(u != v) { 
+			u = next[u][v];  // keep moving u toward v until it hits v
+			path.add(u);
+		}
+		return path;
+
 	}
 
 	protected void cloneWeight() {

@@ -8,5 +8,5 @@ problem from a given source
 package graph.weighted;
 
 public class Problem6_21 {
-	
+	// please see Floyd algorithm
 }
