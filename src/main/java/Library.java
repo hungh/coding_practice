@@ -7,9 +7,9 @@
 public class Library {
 	
     public static void main(String[] args){
-    	System.out.println("=================================================================")
+    	System.out.println("=================================================================");
 	    System.out.println("Welcome to Algorithms and Data Structures! @ coded by Hung Huynh");
-	    System.out.println("=================================================================")
+	    System.out.println("=================================================================");
     }
 
     public boolean someLibraryMethod() {
